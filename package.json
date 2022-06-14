@@ -21,6 +21,7 @@
     "@discordjs/voice": "^0.10.0",
     "discord-api-types": "^0.33.5",
     "discord.js": "^13.8.0",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "ms": "^2.1.3"
   }
 }
