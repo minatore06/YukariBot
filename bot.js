@@ -27,13 +27,12 @@ function activityLoop(){
                     let ar = videos.concat(music)
                     let rId = Math.floor(Math.random()*ar.length)
                     client.user.setActivity("yooooooo",{type:'STREAMING', url:ar[rId]})
-                    client.user.setStatus("idle")
 
                     activityLoop();
                 }, 60000);
             }, 60000);
         }, 30000);
-    }, 20000);
+    }, 30000);
 }
 
 client.on('ready', async () =>{
