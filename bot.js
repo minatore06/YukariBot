@@ -14,17 +14,20 @@ var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube
 function activityLoop(){
     setTimeout(() => {
         client.user.setActivity("prefix -> "+prefix+" | !help non implementato",{type:'LISTENING'})
+        client.user.setStatus("online")
 
         setTimeout(() => {
           client.user.setActivity("prefix-> " + prefix, { type: "WATCHING" })
 
             setTimeout(() => {
-                client.user.setActivity("Mina#3690",{type:'PLAYING'})
+                client.user.setActivity("with Mina#3690",{type:'PLAYING'})
+                client.user.setStatus("dnd")
 
                 setTimeout(() => {
                     let ar = videos.concat(music)
                     let rId = Math.floor(Math.random()*ar.length)
                     client.user.setActivity("yooooooo",{type:'STREAMING', url:ar[rId]})
+                    client.user.setStatus("idle")
 
                     activityLoop();
                 }, 60000);
