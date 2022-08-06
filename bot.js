@@ -20,7 +20,7 @@ function activityLoop(){
           client.user.setActivity("prefix-> /", { type: "WATCHING" })
 
             setTimeout(() => {
-                client.user.setActivity("with Mina#3690",{type:'PLAYING'})
+                client.user.setActivity("con Mina#3690",{type:'PLAYING'})
                 client.user.setStatus("dnd")
 
                 setTimeout(() => {
