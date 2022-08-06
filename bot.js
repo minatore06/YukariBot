@@ -13,11 +13,11 @@ var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube
 
 function activityLoop(){
     setTimeout(() => {
-        client.user.setActivity("prefix -> "+prefix+" | !help non implementato",{type:'LISTENING'})
+        client.user.setActivity("/help non implementato",{type:'LISTENING'})
         client.user.setStatus("online")
 
         setTimeout(() => {
-          client.user.setActivity("prefix-> " + prefix, { type: "WATCHING" })
+          client.user.setActivity("prefix-> /", { type: "WATCHING" })
 
             setTimeout(() => {
                 client.user.setActivity("with Mina#3690",{type:'PLAYING'})
