@@ -96,7 +96,7 @@ client.on('interactionCreate', async interaction => {
                     name: interaction.user.tag,
                     icon_url: interaction.user.displayAvatarURL({dynamic:true})
                 }
-                embed.description = `L'utente: ${target},\nè stato messo in timeout per 1 minuto,\nmoderatore: ${interaction.user},\nmotivo: azione rapida`
+                embed.description = `L'utente: ${target},\nè stato messo in timeout per 1 minuto,\nmoderatore: ${interaction.user},\nquesta è un' azione rapida`
                 if(gConfig[interaction.guildId]["log-channel"]){
                     await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
                 }
@@ -175,14 +175,14 @@ client.on('interactionCreate', async interaction => {
                     icon_url: interaction.guild.iconURL({dynamic:true})
                 }
                 embed.color = 0xFF8F00
-                embed.description = `Sei stato messo in timeout per ${durata}${unita}, motivo: ${reason}`
+                embed.description = `Sei stato messo in timeout per ${durata}${unita}, motivo: \`${reason}\``
                 target.send({ embeds: [embed] });
 
                 embed.author = {
                     name: interaction.user.tag,
                     icon_url: interaction.user.displayAvatarURL({dynamic:true})
                 }
-                embed.description = `L'utente: ${target},\nè stato messo in timeout per ${durata}${unita},\nmoderatore: ${interaction.user},\nmotivo: ${reason}`
+                embed.description = `L'utente: ${target},\nè stato messo in timeout per ${durata}${unita},\nmoderatore: ${interaction.user},\n\`motivo: ${reason}\``
                 
                 if(gConfig[interaction.guildId]["log-channel"]){
                     await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
