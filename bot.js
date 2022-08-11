@@ -91,6 +91,15 @@ client.on('interactionCreate', async interaction => {
                 embed.color = 0xFF8F00
                 embed.description = "Sei stato messo in timeout per 1 minuti, questa è un'azione rapida"
                 target.send({ embeds: [embed] });
+
+                embed.author = {
+                    name: interaction.user.tag,
+                    icon_url: interaction.user.displayAvatarURL({dynamic:true})
+                }
+                embed.description = `L'utente: ${target},\nè stato messo in timeout per 1 minuto,\nmoderatore: ${interaction.user},\nmotivo: azione rapida`
+                if(gConfig[interaction.guildId].log-channel){
+                    client.channels.fetch(gConfig[interaction.guildId].log-channel).send({embeds:[embed]})
+                }
                 break;
             case "balance":
                 target = interaction.targetMember
@@ -168,6 +177,16 @@ client.on('interactionCreate', async interaction => {
                 embed.color = 0xFF8F00
                 embed.description = `Sei stato messo in timeout per ${durata}${unita}, motivo: ${reason}`
                 target.send({ embeds: [embed] });
+
+                embed.author = {
+                    name: interaction.user.tag,
+                    icon_url: interaction.user.displayAvatarURL({dynamic:true})
+                }
+                embed.description = `L'utente: ${target},\nè stato messo in timeout per ${durata}${unita},\nmoderatore: ${interaction.user},\nmotivo: ${reason}`
+                
+                if(gConfig[interaction.guildId].log-channel){
+                    client.channels.fetch(gConfig[interaction.guildId].log-channel).send({embeds:[embed]})
+                }
                 break;
             case "set-log":
                 let logchan = interaction.options.getChannel('log-channel')
@@ -178,11 +197,11 @@ client.on('interactionCreate', async interaction => {
                     break;
                 }
                 await logchan.sendTyping()
-                .then( () => {
+                .then(() => {
                     gConfig[interaction.guildId]["log-channel"] = logchan.id
                     interaction.reply({content:`Log channel impostato a ${logchan}`, ephemeral:true})    
                 })
-                .catch(err => {
+                .catch(() => {
                     interaction.reply({content:`Non ho il permesso di scrivere nella stanza`, ephemeral:true})
                 })
                 break;
