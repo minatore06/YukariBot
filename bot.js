@@ -72,7 +72,7 @@ client.on('interactionCreate', async interaction => {
             case "balance":
                 target = interaction.targetMember
 
-                if(!eco[target.id])await interaction.reply({contenct:"L'utente non ha ancora un conto", ephemeral: true})
+                if(!eco[target.id])await interaction.reply({content:"L'utente non ha ancora un conto", ephemeral: true})
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
         }
@@ -91,7 +91,7 @@ client.on('interactionCreate', async interaction => {
             case "balance":
                 target = interaction.options.getUser('target')
                 target = target?target:interaction.user
-                if(!eco[target.id])await interaction.reply({contenct:"L'utente non ha ancora un conto", ephemeral: true})
+                if(!eco[target.id])await interaction.reply({content:"L'utente non ha ancora un conto", ephemeral: true})
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
             case "shop":
