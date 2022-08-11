@@ -4,7 +4,7 @@ const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const ms = require('ms');
 const fs = require('fs');
-const { token, bOwner } = require('./config.json');
+const { token, bOwner, gConfig } = require('./config.json');
 
 let eco = JSON.parse(fs.readFileSync('./eco.json'))
 let shop = JSON.parse(fs.readFileSync('./shop.json'))
@@ -36,10 +36,14 @@ function activityLoop(){
     }, 30000);
 }
 
-client.on('ready', async () =>{
+client.on('ready', async () => {
     console.log('Online')
     client.user.setActivity("Avviando...",{type:'COMPETING'})
     activityLoop();
+})
+
+client.on('guildCreate', async guild => {
+    if(!gConfig[guild.id])gConfig[guild.id] = {}
 })
 
 client.on('interactionCreate', async interaction => {
