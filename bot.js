@@ -178,11 +178,13 @@ client.on('interactionCreate', async interaction => {
                     break;
                 }
                 await logchan.sendTyping()
+                .then( () => {
+                    gConfig[interaction.guildId]["log-channel"] = logchan.id
+                    interaction.reply({content:`Log channel impostato a ${logchan}`, ephemeral:true})    
+                })
                 .catch(err => {
                     interaction.reply({content:`Non ho il permesso di scrivere nella stanza`, ephemeral:true})
                 })
-                gConfig[interaction.guildId]["log-channel"] = logchan.id
-                interaction.reply({content:`Log channel impostato a ${logchan}`, ephemeral:true})
                 break;
             case "save":
                 target = interaction.user
