@@ -153,7 +153,12 @@ client.on('interactionCreate', async interaction => {
                 client.destroy()
                 process.on("exit", function () {
                     spawn(
-                        './update.sh'
+                        './update.sh',
+                        (error, stdout, stderr) => {
+                            console.log(stdout);
+                            console.log(stderr);
+                            if(error)console.log(error);
+                        }
                     );
                 });
                 process.exit(0)
