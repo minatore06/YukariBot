@@ -172,6 +172,12 @@ client.on('interactionCreate', async interaction => {
             case "set-log":
                 let logchan = interaction.options.getChannel('log-channel')
 
+                if(!logchan.isText)
+                {
+                    interaction.reply({content: "Stanza non valida", ephemeral:true})
+                    break;
+                }
+                await logchan.sendTyping()
                 gConfig[interaction.guildId]["log-channel"] = logchan.id
                 interaction.reply({content:`Log channel impostato a ${logchan}`, ephemeral:true})
                 break;
