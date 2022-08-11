@@ -127,7 +127,7 @@ client.on('interactionCreate', async interaction => {
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
             case "shop":
-                let embed = new MessageEmbed()
+                embed = new MessageEmbed()
                     .setColor('#29ff62')
                     .setTitle('Shop epico')
                     .setDescription('Acquista i nostri incredibili gadget')
