@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { ContextMenuCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data:new ContextMenuCommandBuilder()
 	    .setName('balance')
-        .setType(ApplicationCommandType.User)
+        .setType(2)
 }
