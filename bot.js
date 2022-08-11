@@ -72,12 +72,13 @@ client.on('interactionCreate', async interaction => {
             case "balance":
                 target = interaction.targetMember
 
-                await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
+                if(!eco[target.id])await interaction.reply({contenct:"L'utente non ha ancora un conto", ephemeral: true})
+                else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
         }
     }
 
-    if (interaction.isCommand())
+    else if (interaction.isCommand())
     {
 
         switch(commandName){
@@ -90,8 +91,8 @@ client.on('interactionCreate', async interaction => {
             case "balance":
                 target = interaction.options.getUser('target')
                 target = target?target:interaction.user
-
-                await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
+                if(!eco[target.id])await interaction.reply({contenct:"L'utente non ha ancora un conto", ephemeral: true})
+                else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
             case "shop":
                 let embed = new MessageEmbed()
