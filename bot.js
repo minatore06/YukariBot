@@ -4,7 +4,8 @@ const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const ms = require('ms');
 const fs = require('fs');
-const { token, bOwner, gConfig } = require('./config.json');
+const { token, bOwner } = require('./config.json');
+const gConfig = require('./gConfig.json');
 
 let eco = JSON.parse(fs.readFileSync('./eco.json'))
 let shop = JSON.parse(fs.readFileSync('./shop.json'))
@@ -44,6 +45,7 @@ client.on('ready', async () => {
 
 client.on('guildCreate', async guild => {
     if(!gConfig[guild.id])gConfig[guild.id] = {}
+    fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
 client.on('interactionCreate', async interaction => {
