@@ -45,6 +45,7 @@ client.on('ready', async () =>{
 client.on('interactionCreate', async interaction => {
     let commandName = interaction.commandName;
     let target;
+    let embed;
 
     if(interaction.isAutocomplete()){
         let choices = Object.keys(shop)
@@ -69,6 +70,21 @@ client.on('interactionCreate', async interaction => {
                     await interaction.editReply(err)
                     return;
                 })
+                embed = {
+                    title: 'Notifica di moderazione',
+                    author: {
+                        name: interaction.guild.name,
+                        icon_url: interaction.guild.iconURL({dynamic:true})
+                    },
+                    color: 0xFF8F00,
+                    description: "Sei stato messo in timeout per 1 minuti, questa è un'azione rapida",
+                    footer: {
+                        text: (await client.users.fetch(bOwner)).tag,
+                        icon_url: (await client.users.fetch(bOwner)).displayAvatarURL({dynamic:true})
+                    },
+                    timestamp: new Date().toISOString()
+                }
+                target.send({ embeds: [embed] });
                 break;
             case "balance":
                 target = interaction.targetMember
