@@ -148,7 +148,7 @@ client.on('interactionCreate', async interaction => {
             case "restart":
                 target = interaction.user
                 if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
-                await interaction.reply({content:"GN", ephemeral:true})
+                await interaction.reply({content:"Restarting...", ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
                 client.destroy()
                 process.on("exit", function () {
