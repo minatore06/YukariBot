@@ -97,7 +97,7 @@ client.on('interactionCreate', async interaction => {
                     icon_url: interaction.user.displayAvatarURL({dynamic:true})
                 }
                 embed.description = `L'utente: ${target},\nè stato messo in timeout per 1 minuto,\nmoderatore: ${interaction.user},\nmotivo: azione rapida`
-                if(gConfig[interaction.guildId].log-channel){
+                if(gConfig[interaction.guildId]["log-channel"]){
                     client.channels.fetch(gConfig[interaction.guildId].log-channel).send({embeds:[embed]})
                 }
                 break;
@@ -184,7 +184,7 @@ client.on('interactionCreate', async interaction => {
                 }
                 embed.description = `L'utente: ${target},\nè stato messo in timeout per ${durata}${unita},\nmoderatore: ${interaction.user},\nmotivo: ${reason}`
                 
-                if(gConfig[interaction.guildId].log-channel){
+                if(gConfig[interaction.guildId]["log-channel"]){
                     client.channels.fetch(gConfig[interaction.guildId].log-channel).send({embeds:[embed]})
                 }
                 break;
