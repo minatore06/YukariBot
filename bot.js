@@ -155,7 +155,7 @@ client.on('interactionCreate', async interaction => {
                 durata = durata?durata:1;
                 let unita = interaction.options.getString('unita');
                 unita = unita?unita:'m';
-                let reason = interaction.options.getString('reason');
+                let reason = interaction.options.getString('motivo');
                 reason = reason?reason:'';
 
                 if(!target.moderatable)
