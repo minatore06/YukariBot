@@ -172,7 +172,7 @@ client.on('interactionCreate', async interaction => {
             case "set-log":
                 let logchan = interaction.options.getChannel('log-channel')
 
-                if(!logchan.isText)
+                if(!logchan.isText())
                 {
                     interaction.reply({content: "Stanza non valida", ephemeral:true})
                     break;
