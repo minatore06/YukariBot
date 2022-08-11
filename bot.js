@@ -154,9 +154,6 @@ client.on('interactionCreate', async interaction => {
                 process.on("exit", function () {
                     spawn(
                         './update.sh',
-                        {
-                        detached: true
-                        },
                         (error, stdout, stderr) => {
                             console.log(stdout);
                             console.log(stderr);
