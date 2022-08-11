@@ -1,5 +1,5 @@
 const process = require('node:process');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const ms = require('ms');
@@ -79,7 +79,7 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    else if (interaction.isCommand())
+    if (interaction.isCommand())
     {
 
         switch(commandName){
@@ -152,14 +152,12 @@ client.on('interactionCreate', async interaction => {
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
                 client.destroy()
                 process.on("exit", function () {
-                    exec('sh update.sh',
-                    (error, stdout, stderr) => {
-                        console.log(stdout);
-                        console.log(stderr);
-                        if (error !== null) {
-                            console.log(`exec error: ${error}`);
-                        }
-                    });
+                    spawn('./update.sh',
+                    {
+                        cwd: process.cwd(),
+                        detached: true,
+                        stdio: "inherit"
+                    })
                 });
                 process.exit(0)
                 break
