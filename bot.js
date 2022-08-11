@@ -169,6 +169,12 @@ client.on('interactionCreate', async interaction => {
                 embed.description = `Sei stato messo in timeout per ${durata}${unita}, motivo: ${reason}`
                 target.send({ embeds: [embed] });
                 break;
+            case "set-log":
+                let logchan = interaction.options.getChannel('log-channel')
+
+                gConfig[interaction.guildId]["log-channel"] = logchan.id
+                interaction.reply({content:`Log channel impostato a ${logchan}`, ephemeral:true})
+                break;
             case "save":
                 target = interaction.user
                 if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
