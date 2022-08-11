@@ -42,87 +42,116 @@ client.on('ready', async () =>{
 })
 
 client.on('interactionCreate', async interaction => {
+    let commandName = interaction.commandName;
+    let target;
+
     if(interaction.isAutocomplete()){
         let choices = Object.keys(shop)
         await interaction.respond(choices.map(choice => ({name:choice, value:choice})))
     }
 
-    if (!interaction.isCommand()) return;
+    if(interaction.isUserContextMenu())
+    {
 
-    let commandName = interaction.commandName;
-    let target;
+        switch(commandName){
+            case "timeout":
+                await interaction.deferReply({ ephemeral: true });
+                target = interaction.targetMember
 
-    switch(commandName){
-        case "ping":
-            await interaction.reply({content:"Pong!", ephemeral: true});
-            break;
-        case "fluff":
-            await interaction.reply("https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif")
-            break;
-        case "balance":
-            target = interaction.options.getUser('target')
-            target = target?target:interaction.user
+                if(!target.moderatable)
+                    return await interaction.editReply("Permessi insufficienti");
 
-            await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
-            break;
-        case "shop":
-            let embed = new MessageEmbed()
-                .setColor('#29ff62')
-                .setTitle('Shop epico')
-                .setDescription('Acquista i nostri incredibili gadget')
-                .setFooter({text:'Mina#3690', iconURL:'https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif'})
-            
-            let item = interaction.options.getString('item')
-            if(item&&shop[item]){
-                embed.setTitle(item)
-                    .setDescription(`${shop[item].description}\n${shop[item].price}$${shop[item].quantita?"\n"+shop[item].quantita+" disponibili":""}\n${shop[item].consumable?"Consumabile":"Unico"}`)
+                await target.disableCommunicationUntil(Date.now()+(ms('1m')), "Quick moderation action")
+                .then(await interaction.editReply("Timeout avvenuto con successo"))
+                .catch(async(err) => {
+                    console.log(err)
+                    await interaction.editReply(err)
+                    return;
+                })
+                break;
+            case "balance":
+                target = interaction.targetMember
+
+                await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
+                break;
+        }
+    }
+
+    if (interaction.isCommand())
+    {
+
+        switch(commandName){
+            case "ping":
+                await interaction.reply({content:"Pong!", ephemeral: true});
+                break;
+            case "fluff":
+                await interaction.reply("https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif")
+                break;
+            case "balance":
+                target = interaction.options.getUser('target')
+                target = target?target:interaction.user
+
+                await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
+                break;
+            case "shop":
+                let embed = new MessageEmbed()
+                    .setColor('#29ff62')
+                    .setTitle('Shop epico')
+                    .setDescription('Acquista i nostri incredibili gadget')
+                    .setFooter({text:'Mina#3690', iconURL:'https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif'})
                 
-                if(shop[item].image)embed.setThumbnail(shop[item].image)
-            }else{
-                Object.keys(shop).forEach(item => {
-                    embed.addField(item+" - "+shop[item].price+"$", `${shop[item].description} | ${shop[item].quantita?shop[item].quantita+" disponibili":""}`)
-                });
-            }
+                let item = interaction.options.getString('item')
+                if(item&&shop[item]){
+                    embed.setTitle(item)
+                        .setDescription(`${shop[item].description}\n${shop[item].price}$${shop[item].quantita?"\n"+shop[item].quantita+" disponibili":""}\n${shop[item].consumable?"Consumabile":"Unico"}`)
+                    
+                    if(shop[item].image)embed.setThumbnail(shop[item].image)
+                }else{
+                    Object.keys(shop).forEach(item => {
+                        embed.addField(item+" - "+shop[item].price+"$", `${shop[item].description} | ${shop[item].quantita?shop[item].quantita+" disponibili":""}`)
+                    });
+                }
 
-            await interaction.reply({embeds:[embed]})
-            break;
-        case "time-out":
-            await interaction.deferReply({ ephemeral: true });
+                await interaction.reply({embeds:[embed]})
+                break;
+            case "time-out":
+                await interaction.deferReply({ ephemeral: true });
 
-            target = interaction.options.getMember('target');
-            let durata = interaction.options.getInteger('time');
-            durata = durata?durata:1;
-            let unita = interaction.options.getString('unita');
-            unita = unita?unita:'m';
-            let reason = interaction.options.getString('reason');
+                target = interaction.options.getMember('target');
+                let durata = interaction.options.getInteger('time');
+                durata = durata?durata:1;
+                let unita = interaction.options.getString('unita');
+                unita = unita?unita:'m';
+                let reason = interaction.options.getString('reason');
 
-            if(!target.moderatable)
-                return await interaction.editReply("Permessi insufficienti");
+                if(!target.moderatable)
+                    return await interaction.editReply("Permessi insufficienti");
 
-            await target.disableCommunicationUntil(Date.now()+(ms(durata+unita)), reason)
-            .then(await interaction.editReply("Timeout avvenuto con successo"))
-            .catch(async(err) => {
-                console.log(err)
-                await interaction.editReply(err)
-                return;
-            })
+                await target.disableCommunicationUntil(Date.now()+(ms(durata+unita)), reason)
+                .then(await interaction.editReply("Timeout avvenuto con successo"))
+                .catch(async(err) => {
+                    console.log(err)
+                    await interaction.editReply(err)
+                    return;
+                })
 
-            break;
-        case "save":
-            target = interaction.user
-            if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
-            await interaction.deferReply({ephemeral:true})
-            fs.writeFileSync('./eco.json', JSON.stringify(eco))
-            await interaction.editReply("Salvataggio completato")
-            break;
-        case "shutdown":
-            target = interaction.user
-            if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
-            await interaction.reply({content:"GN", ephemeral:true})
-            fs.writeFileSync('./eco.json', JSON.stringify(eco))
-            client.destroy()
-            process.exit(0)
-            break;
+                break;
+            case "save":
+                target = interaction.user
+                if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
+                await interaction.deferReply({ephemeral:true})
+                fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                await interaction.editReply("Salvataggio completato")
+                break;
+            case "shutdown":
+                target = interaction.user
+                if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
+                await interaction.reply({content:"GN", ephemeral:true})
+                fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                client.destroy()
+                process.exit(0)
+                break;
+        }
     }
 });
 
