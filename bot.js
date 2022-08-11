@@ -182,7 +182,7 @@ client.on('interactionCreate', async interaction => {
                     name: interaction.user.tag,
                     icon_url: interaction.user.displayAvatarURL({dynamic:true})
                 }
-                embed.description = `L'utente: ${target},\nè stato messo in timeout per ${durata}${unita},\nmoderatore: ${interaction.user},\n\`motivo: ${reason}\``
+                embed.description = `L'utente: ${target},\nè stato messo in timeout per ${durata}${unita},\nmoderatore: ${interaction.user},\nmotivo: \`${reason}\``
                 
                 if(gConfig[interaction.guildId]["log-channel"]){
                     await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
