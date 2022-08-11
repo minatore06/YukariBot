@@ -1,4 +1,5 @@
 const process = require('node:process');
+const { spawn } = require('child_process');
 const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const ms = require('ms');
@@ -144,6 +145,27 @@ client.on('interactionCreate', async interaction => {
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
                 await interaction.editReply("Salvataggio completato")
                 break;
+            case "restart":
+                target = interaction.user
+                if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
+                await interaction.reply({content:"GN", ephemeral:true})
+                fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                client.destroy()
+                process.on("exit", function () {
+                    spawn(
+                        './update.sh',
+                        {
+                        detached: true
+                        },
+                        (error, stdout, stderr) => {
+                            console.log(stdout);
+                            console.log(stderr);
+                            if(error)console.log(error);
+                        }
+                    );
+                });
+                process.exit(0)
+                break
             case "shutdown":
                 target = interaction.user
                 if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
