@@ -180,6 +180,7 @@ client.on('interactionCreate', async interaction => {
                 if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
                 await interaction.deferReply({ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
                 await interaction.editReply("Salvataggio completato")
                 break;
             case "restart":
@@ -230,4 +231,5 @@ client.login(token)
 
 process.on('exit', (code) => {
     fs.writeFileSync('./eco.json', JSON.stringify(eco))
+    fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 });
