@@ -259,6 +259,14 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 
 client.login(token)
 
+client.on('error', err => {
+    fs.writeFileSync('./err.log', err)
+})
+
+process.on('uncaughtException', (err, origin) => {
+    fs.writeFileSync('./err.log', err)
+});
+
 process.on('exit', (code) => {
     fs.writeFileSync('./eco.json', JSON.stringify(eco))
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
