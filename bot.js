@@ -265,7 +265,7 @@ client.on('error', err => {
 })
 
 process.on('uncaughtException', (err, origin) => {
-    fs.writeFileSync('./err.log', err)
+    fs.writeFileSync('./err.log', err.message)
 });
 
 process.on('exit', (code) => {
