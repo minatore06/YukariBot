@@ -50,6 +50,7 @@ client.on('guildCreate', async guild => {
 })
 
 client.on('guildMemberRemove', async member => {
+    console.log("Hello")
     gConfig[guild.id]["memberRoles"][member.id] = member.roles.cache
     console.log(gConfig[guild.id]["memberRoles"][member.id])
 })
