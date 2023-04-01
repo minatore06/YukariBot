@@ -45,26 +45,29 @@ client.on('ready', async () => {
 
 client.on('guildCreate', async guild => {
     if(!gConfig[guild.id])gConfig[guild.id] = {}
-    if(!gConfig[guild.id]["memberRoles"])gConfig[guild.id]["memberRoles"] = {}
+    if(!gConfig[guild.id]["memberBackup"])gConfig[guild.id]["memberBackup"] = {}
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
 client.on('guildMemberAdd', async member => {
-    let memberRoles = gConfig[member.guild.id]["memberRoles"][member.id]
-    console.log("hello")
+    let memberRoles = gConfig[member.guild.id]["memberBackup"][member.id]["roles"]
+    let nickname = gConfig[member.guild.id]["memberBackup"][member.id]["nickname"]
     console.log(memberRoles)
     memberRoles.forEach(role => {
         member.roles.add(role, "Sticky roles")
             .catch(console.error)
     });
+    member.setNickname(nickname)
+        .catch(console.error)
 })
 
 client.on('guildMemberRemove', async member => {
     let memberRoles = member.roles.cache
         .filter((roles) => roles.id !== member.guild.id)
         .map((role) => role.id)
-    console.log("byebye")
-    gConfig[member.guild.id]["memberRoles"][member.id] = memberRoles
+    gConfig[member.guild.id]["memberBackup"][member.id] = {}
+    gConfig[member.guild.id]["memberBackup"][member.id]["roles"] = memberRoles
+    gConfig[member.guild.id]["memberBackup"][member.id]["nickname"] = member.nickname
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
