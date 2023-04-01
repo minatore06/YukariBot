@@ -45,7 +45,13 @@ client.on('ready', async () => {
 
 client.on('guildCreate', async guild => {
     if(!gConfig[guild.id])gConfig[guild.id] = {}
+    if(!gConfig[guild.id]["memberRoles"])gConfig[guild.id]["memberRoles"] = {}
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
+})
+
+client.on('guildMemberRemove', async member => {
+    gConfig[guild.id]["memberRoles"][member.id] = member.roles.cache
+    console.log(gConfig[guild.id]["memberRoles"][member.id])
 })
 
 client.on('interactionCreate', async interaction => {
