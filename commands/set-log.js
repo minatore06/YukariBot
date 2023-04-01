@@ -7,7 +7,7 @@ module.exports = {
 	    .setDescription('Set the channel for logs')
         .addChannelOption(option =>
             option.setName('log-channel')
-            .setDescription('La stanza dove mandare i log del bot')
+            .setDescription('The channel where the bot will send logs')
             .setRequired(true))
         .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)

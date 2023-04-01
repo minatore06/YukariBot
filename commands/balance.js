@@ -3,8 +3,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
     data:new SlashCommandBuilder()
 	    .setName('balance')
-	    .setDescription('Controlla il tuo portafoglio')
+	    .setDescription('Check your wallet')
         .addUserOption(option =>
             option.setName("target")
-                .setDescription("La persona il cui portafoglio vuoi controllare")),
+                .setDescription("The user whos wallet you want to check")),
 }

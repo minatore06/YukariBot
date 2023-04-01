@@ -15,14 +15,14 @@ var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube
 
 function activityLoop(){
     setTimeout(() => {
-        client.user.setActivity("/help non implementato",{type:'LISTENING'})
+        client.user.setActivity("There's no /help",{type:'LISTENING'})
         client.user.setStatus("online")
 
         setTimeout(() => {
           client.user.setActivity("prefix-> /", { type: "WATCHING" })
 
             setTimeout(() => {
-                client.user.setActivity("con Mina#3690",{type:'PLAYING'})
+                client.user.setActivity("with Mina#3690",{type:'PLAYING'})
                 client.user.setStatus("dnd")
 
                 setTimeout(() => {
@@ -39,7 +39,7 @@ function activityLoop(){
 
 client.on('ready', async () => {
     console.log('Online')
-    client.user.setActivity("Avviando...",{type:'COMPETING'})
+    client.user.setActivity("Starting...",{type:'COMPETING'})
     activityLoop();
 })
 
@@ -89,30 +89,30 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.targetMember
 
                 if(!target.moderatable)
-                    return await interaction.editReply("Permessi insufficienti");
+                    return await interaction.editReply("I don't have enough permissions");
 
                 await target.disableCommunicationUntil(Date.now()+(ms('1m')), "Quick moderation action")
-                .then(await interaction.editReply("Timeout avvenuto con successo"))
+                .then(await interaction.editReply("Timeout succeded"))
                 .catch(async(err) => {
                     console.log(err)
                     await interaction.editReply(err)
                     return;
                 })
 
-                embed.title = 'Notifica di moderazione'
+                embed.title = 'Moderation notify'
                 embed.author = {
                     name: interaction.guild.name,
                     icon_url: interaction.guild.iconURL({dynamic:true})
                 }
                 embed.color = 0xFF8F00
-                embed.description = "Sei stato messo in timeout per 1 minuto, questa è un'azione rapida"
+                embed.description = "You got timeouted for 1 minute, this is a rapid action"
                 target.send({ embeds: [embed] });
 
                 embed.author = {
                     name: interaction.user.tag,
                     icon_url: interaction.user.displayAvatarURL({dynamic:true})
                 }
-                embed.description = `L'utente: ${target},\nè stato messo in timeout per \`1 minuto\`,\nmoderatore: ${interaction.user},\nmotivo: \`azione rapida\``
+                embed.description = `User: ${target},\ngot timeouted for \`1 minute\`,\nmoderator: ${interaction.user},\nreason: \`rapid action\``
                 if(gConfig[interaction.guildId]["log-channel"]){
                     await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
                 }
@@ -120,7 +120,7 @@ client.on('interactionCreate', async interaction => {
             case "balance":
                 target = interaction.targetMember
 
-                if(!eco[target.id])await interaction.reply({content:"L'utente non ha ancora un conto", ephemeral: true})
+                if(!eco[target.id])await interaction.reply({content:"User doesn't have an account yet", ephemeral: true})
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
         }
@@ -140,14 +140,14 @@ client.on('interactionCreate', async interaction => {
             case "balance":
                 target = interaction.options.getUser('target')
                 target = target?target:interaction.user
-                if(!eco[target.id])await interaction.reply({content:"L'utente non ha ancora un conto", ephemeral: true})
+                if(!eco[target.id])await interaction.reply({content:"User doesn't have an account yet", ephemeral: true})
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
             case "shop":
                 embed = new MessageEmbed()
                     .setColor('#29ff62')
-                    .setTitle('Shop epico')
-                    .setDescription('Acquista i nostri incredibili gadget')
+                    .setTitle('Epic Shop')
+                    .setDescription('Buy our incredibles gadgets')
                     .setFooter({text:'Mina#3690', iconURL:'https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif'})
                 
                 let item = interaction.options.getString('item')
@@ -170,36 +170,36 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.options.getMember('target');
                 let durata = interaction.options.getInteger('time');
                 durata = durata?durata:1;
-                let unita = interaction.options.getString('unita');
+                let unita = interaction.options.getString('unit');
                 unita = unita?unita:'m';
-                let reason = interaction.options.getString('motivo');
+                let reason = interaction.options.getString('reason');
                 reason = reason?reason:'';
 
                 if(!target.moderatable)
-                    return await interaction.editReply("Permessi insufficienti");
+                    return await interaction.editReply("I don't have enough permissions");
 
                 await target.disableCommunicationUntil(Date.now()+(ms(durata+unita)), reason)
-                .then(await interaction.editReply("Timeout avvenuto con successo"))
+                .then(await interaction.editReply("Timeout succeded"))
                 .catch(async(err) => {
                     console.log(err)
                     await interaction.editReply(err)
                     return;
                 })
 
-                embed.title = 'Notifica di moderazione'
+                embed.title = 'Moderation notify'
                 embed.author = {
                     name: interaction.guild.name,
                     icon_url: interaction.guild.iconURL({dynamic:true})
                 }
                 embed.color = 0xFF8F00
-                embed.description = `Sei stato messo in timeout per ${durata}${unita}, motivo: \`${reason}\``
+                embed.description = `You got timeouted ${durata}${unita}, reason: \`${reason}\``
                 target.send({ embeds: [embed] });
 
                 embed.author = {
                     name: interaction.user.tag,
                     icon_url: interaction.user.displayAvatarURL({dynamic:true})
                 }
-                embed.description = `L'utente: ${target},\nè stato messo in timeout per \`${durata}${unita}\`,\nmoderatore: ${interaction.user},\nmotivo: \`${reason}\``
+                embed.description = `User: ${target},\ngot timeouted for \`${durata}${unita}\`,\nmoderator: ${interaction.user},\nreason: \`${reason}\``
                 
                 if(gConfig[interaction.guildId]["log-channel"]){
                     await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
@@ -210,29 +210,29 @@ client.on('interactionCreate', async interaction => {
 
                 if(!logchan.isText())
                 {
-                    interaction.reply({content: "Stanza non valida", ephemeral:true})
+                    interaction.reply({content: "Invalid channel", ephemeral:true})
                     break;
                 }
                 await logchan.sendTyping()
                 .then(() => {
                     gConfig[interaction.guildId]["log-channel"] = logchan.id
-                    interaction.reply({content:`Log channel impostato a ${logchan}`, ephemeral:true})    
+                    interaction.reply({content:`Log channel set as ${logchan}`, ephemeral:true})    
                 })
                 .catch(() => {
-                    interaction.reply({content:`Non ho il permesso di scrivere nella stanza`, ephemeral:true})
+                    interaction.reply({content:`I can't write in that channel`, ephemeral:true})
                 })
                 break;
             case "save":
                 target = interaction.user
-                if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
+                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
                 await interaction.deferReply({ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
                 fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
-                await interaction.editReply("Salvataggio completato")
+                await interaction.editReply("Save complete")
                 break;
             case "restart":
                 target = interaction.user
-                if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
+                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
                 await interaction.reply({content:"Restarting...", ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
                 client.destroy()
@@ -249,7 +249,7 @@ client.on('interactionCreate', async interaction => {
                 break
             case "shutdown":
                 target = interaction.user
-                if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
+                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
                 await interaction.reply({content:"GN", ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
                 console.log("Shutted down")
