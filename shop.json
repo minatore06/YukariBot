@@ -1,6 +1,6 @@
 {
     "test":{
-        "description":"Questa è una prova",
+        "description":"This is a test",
         "price":1,
         "image":"https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif",
         "consumable":false,
