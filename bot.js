@@ -1,7 +1,7 @@
 const process = require('node:process');
 const { spawn } = require('child_process');
 const { Client, Intents, MessageEmbed } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_VOICE_STATES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const ms = require('ms');
 const fs = require('fs');
 const { token, bOwner } = require('./config.json');
@@ -51,6 +51,7 @@ client.on('guildCreate', async guild => {
 
 client.on('guildMemberAdd', async member => {
     let memberRoles = gConfig[member.guild.id]["memberRoles"][member.id]
+    console.log("hello")
     console.log(memberRoles)
     memberRoles.forEach(role => {
         member.roles.add(role, "Sticky roles")
@@ -62,6 +63,7 @@ client.on('guildMemberRemove', async member => {
     let memberRoles = member.roles.cache
         .filter((roles) => roles.id !== member.guild.id)
         .map((role) => role.id)
+    console.log("byebye")
     gConfig[member.guild.id]["memberRoles"][member.id] = memberRoles
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
