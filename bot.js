@@ -49,10 +49,19 @@ client.on('guildCreate', async guild => {
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
+client.on('guildMemberAdd', async member => {
+    let memberRoles = gConfig[member.guild.id]["memberRoles"][member.id]
+    console.log(memberRoles)
+    member.roles.set(memberRoles, "Sticky roles")
+        .catch(console.error)
+})
+
 client.on('guildMemberRemove', async member => {
-    console.log("Hello")
-    gConfig[guild.id]["memberRoles"][member.id] = member.roles.cache
-    console.log(gConfig[guild.id]["memberRoles"][member.id])
+    let memberRoles = member.roles.cache
+        .filter((roles) => roles.id !== member.guild.id)
+        .map((role) => role.id)
+    gConfig[member.guild.id]["memberRoles"][member.id] = memberRoles
+    fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
 client.on('interactionCreate', async interaction => {
@@ -235,6 +244,7 @@ client.on('interactionCreate', async interaction => {
                         stdio: "inherit"
                     })
                 });
+                console.log("Restarting")
                 process.exit(0)
                 break
             case "shutdown":
@@ -242,6 +252,7 @@ client.on('interactionCreate', async interaction => {
                 if(target.id!=bOwner)return await interaction.reply({content:"Non conosci questo comando", ephemeral:true})
                 await interaction.reply({content:"GN", ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                console.log("Shutted down")
                 client.destroy()
                 process.exit(0)
                 break;
