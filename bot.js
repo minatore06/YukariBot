@@ -153,12 +153,12 @@ client.on('interactionCreate', async interaction => {
                 let item = interaction.options.getString('item')
                 if(item&&shop[item]){
                     embed.setTitle(item)
-                        .setDescription(`${shop[item].description}\n${shop[item].price}$${shop[item].quantita?"\n"+shop[item].quantita+" disponibili":""}\n${shop[item].consumable?"Consumabile":"Unico"}`)
+                        .setDescription(`${shop[item].description}\n${shop[item].price}$${shop[item].quantita?"\n"+shop[item].quantita+" available":""}\n${shop[item].consumable?"Consunable":"Unic"}`)
                     
                     if(shop[item].image)embed.setThumbnail(shop[item].image)
                 }else{
                     Object.keys(shop).forEach(item => {
-                        embed.addField(item+" - "+shop[item].price+"$", `${shop[item].description} | ${shop[item].quantita?shop[item].quantita+" disponibili":""}`)
+                        embed.addField(item+" - "+shop[item].price+"$", `${shop[item].description} | ${shop[item].quantita?shop[item].quantita+" available":""}`)
                     });
                 }
 
