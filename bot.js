@@ -52,8 +52,10 @@ client.on('guildCreate', async guild => {
 client.on('guildMemberAdd', async member => {
     let memberRoles = gConfig[member.guild.id]["memberRoles"][member.id]
     console.log(memberRoles)
-    member.roles.set(memberRoles, "Sticky roles")
-        .catch(console.error)
+    memberRoles.forEach(role => {
+        member.roles.add(role, "Sticky roles")
+            .catch(console.error)
+    });
 })
 
 client.on('guildMemberRemove', async member => {
