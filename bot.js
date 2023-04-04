@@ -1,11 +1,12 @@
 const process = require('node:process');
 const { spawn } = require('child_process');
-const { Client, Intents, MessageEmbed } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_VOICE_STATES] });
+const { Client, GatewayIntentBits, MessageEmbed } = require('discord.js');
 const ms = require('ms');
 const fs = require('fs');
 const { token, bOwner } = require('./config.json');
 const gConfig = require('./gConfig.json');
+
+const client = new Client({ intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildIntegrations, GatewayIntentBits.GuildVoiceStates] });
 
 let eco = JSON.parse(fs.readFileSync('./eco.json'))
 let shop = JSON.parse(fs.readFileSync('./shop.json'))
@@ -46,6 +47,7 @@ client.on('ready', async () => {
 client.on('guildCreate', async guild => {
     if(!gConfig[guild.id])gConfig[guild.id] = {}
     if(!gConfig[guild.id]["memberBackup"])gConfig[guild.id]["memberBackup"] = {}
+    if(!gConfig[guild.id]["modules"])gConfig[guild.id]["modules"] = {"stickyRoles":false}
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
@@ -74,6 +76,7 @@ client.on('guildMemberRemove', async member => {
 client.on('interactionCreate', async interaction => {
     let commandName = interaction.commandName;
     let target;
+    let channel;
     let embed = {
         footer: {
             text: (await client.users.fetch(bOwner)).tag,
@@ -83,11 +86,45 @@ client.on('interactionCreate', async interaction => {
     };
 
     if(interaction.isAutocomplete()){
-        let choices = Object.keys(shop)
-        await interaction.respond(choices.map(choice => ({name:choice, value:choice})))
+        let focused = interaction.options.getFocused(true)
+
+        switch (focused.name) {
+            case "item":
+                let choices = Object.keys(shop)
+                await interaction.respond(choices.map(choice => ({name:choice, value:choice})))
+                    .catch((err) => console.log(err))
+                break;
+        }
     }
 
-    if(interaction.isUserContextMenu())
+    else if (interaction.isChatInputCommand()){
+        switch (commandName) {
+            case "submit-emoji":
+                if(!interaction.options.getAttachment('emoji').contentType.startsWith('image')) return interaction.reply({content:"Wrong file type", ephemeral:true})
+                channel = await interaction.guild.channels.fetch('1092877125511561216')
+                embed.author = {
+                    name:interaction.member.displayName,
+                    icon_url:interaction.member.displayAvatarURL({dynamic:true})
+                }
+                embed.footer.text = interaction.member.id
+                embed.color = 0x00b0f4
+                embed.image = {
+                    url: interaction.options.getAttachment('emoji').url
+                }
+                channel.send({embeds:[embed]})
+                    .then((msg) => {
+                        msg.react('👍')
+                        msg.react('👎')
+                        interaction.reply({content:"Image sent", ephemeral:true})
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                break;
+        }
+    }
+
+    else if(interaction.isUserContextMenu())
     {
 
         switch(commandName){
@@ -133,7 +170,7 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    if (interaction.isCommand())
+    else if (interaction.isCommand())
     {
 
         switch(commandName){

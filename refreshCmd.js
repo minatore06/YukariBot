@@ -19,7 +19,7 @@ const guildId = '710132095338676315';
 	const rest = new REST({ version: '9' }).setToken(token);
 
 
-	try {
+ 	try {
 		console.log('Started refreshing application (/) commands.');
 
 		await rest.put(
@@ -32,7 +32,7 @@ const guildId = '710132095338676315';
 		console.error(error);
 	}
 
-/* 	try {
+/*  	try {
 		console.log('Started refreshing guild application (/) commands.');
 
 		await rest.put(
