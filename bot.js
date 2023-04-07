@@ -125,7 +125,7 @@ client.on('interactionCreate', async interaction => {
                 break;
             case "ping":
                 let sent = await interaction.reply({content:`Pong!`, ephemeral: true});
-                interaction.editReply(`Heartbeat: ${client.ws.ping}ms`/* , Lantency: ${sent.createdTimestamp - interaction.createdTimestamp}ms */)
+                interaction.editReply(`Heartbeat: ${client.ws.ping}ms, Lantency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`)
                 break;
             case "fluff":
                 await interaction.reply("https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif")
