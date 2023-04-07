@@ -1,6 +1,7 @@
 const process = require('node:process');
 const { spawn } = require('child_process');
-const { Client, GatewayIntentBits, MessageEmbed } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
+const { EmbedBuilder } = require('@discordjs/builders');
 const ms = require('ms');
 const fs = require('fs');
 const { token, bOwner } = require('./config.json');
@@ -85,6 +86,7 @@ client.on('interactionCreate', async interaction => {
         timestamp: new Date().toISOString()
     };
 
+
     if(interaction.isAutocomplete()){
         let focused = interaction.options.getFocused(true)
 
@@ -120,6 +122,132 @@ client.on('interactionCreate', async interaction => {
                     .catch(err => {
                         console.log(err)
                     })
+                break;
+            case "ping":
+                let sent = await interaction.reply({content:`Pong!`, ephemeral: true});
+                interaction.editReply(`Heartbeat: ${client.ws.ping}ms`/* , Lantency: ${sent.createdTimestamp - interaction.createdTimestamp}ms */)
+                break;
+            case "fluff":
+                await interaction.reply("https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif")
+                break;
+            case "balance":
+                target = interaction.options.getUser('target')
+                target = target?target:interaction.user
+                if(!eco[target.id])await interaction.reply({content:"User doesn't have an account yet", ephemeral: true})
+                else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
+                break;
+            case "shop":
+                embed = new EmbedBuilder()
+                .setColor(0x29ff62)
+                .setTitle('Epic Shop')
+                .setDescription('Buy our incredibles gadgets')
+                .setFooter({text:'Mina#3690', iconURL:'https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif'})
+                
+                let item = interaction.options.getString('item')
+                if(item&&shop[item]){
+                    embed.setTitle(item)
+                    .setDescription(`${shop[item].description}\n${shop[item].price}$${shop[item].quantita?"\n"+shop[item].quantita+" available":""}\n${shop[item].consumable?"Consunable":"Unic"}`)
+                    
+                    if(shop[item].image)embed.setThumbnail(shop[item].image)
+                }else{
+                    Object.keys(shop).forEach(item => {
+                        embed.addFields({name: item+" - "+shop[item].price+"$", value: `${shop[item].description} | ${shop[item].quantita?shop[item].quantita+" available":""}`})
+                    });
+                }
+                
+                await interaction.reply({embeds:[embed]})
+                break;
+            case "time-out":
+                await interaction.deferReply({ ephemeral: true });
+
+                target = interaction.options.getMember('target');
+                let durata = interaction.options.getInteger('time');
+                durata = durata?durata:1;
+                let unita = interaction.options.getString('unit');
+                unita = unita?unita:'m';
+                let reason = interaction.options.getString('reason');
+                reason = reason?reason:'';
+
+                if(!target.moderatable)
+                    return await interaction.editReply("I don't have enough permissions");
+
+                await target.disableCommunicationUntil(Date.now()+(ms(durata+unita)), reason)
+                .then(await interaction.editReply("Timeout succeded"))
+                .catch(async(err) => {
+                    console.log(err)
+                    await interaction.editReply(err)
+                    return;
+                })
+
+                embed.title = 'Moderation notify'
+                embed.author = {
+                    name: interaction.guild.name,
+                    icon_url: interaction.guild.iconURL({dynamic:true})
+                }
+                embed.color = 0xFF8F00
+                embed.description = `You got timeouted ${durata}${unita}, reason: \`${reason}\``
+                target.send({ embeds: [embed] });
+
+                embed.author = {
+                    name: interaction.user.tag,
+                    icon_url: interaction.user.displayAvatarURL({dynamic:true})
+                }
+                embed.description = `User: ${target},\ngot timeouted for \`${durata}${unita}\`,\nmoderator: ${interaction.user},\nreason: \`${reason}\``
+                
+                if(gConfig[interaction.guildId]["log-channel"]){
+                    await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
+                }
+                break;
+            case "set-log":
+                let logchan = interaction.options.getChannel('log-channel')
+                if(!logchan.isTextBased())
+                {
+                    interaction.reply({content: "Invalid channel", ephemeral:true})
+                    break;
+                }
+                console.log("sos")
+                await logchan.sendTyping()
+                .then(() => {
+                    gConfig[interaction.guildId]["log-channel"] = logchan.id
+                    interaction.reply({content:`Log channel set as ${logchan}`, ephemeral:true})    
+                })
+                .catch(() => {
+                    interaction.reply({content:`I can't write in that channel`, ephemeral:true})
+                })
+                break;
+            case "save":
+                target = interaction.user
+                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
+                await interaction.deferReply({ephemeral:true})
+                fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
+                await interaction.editReply("Save complete")
+                break;
+            case "restart":
+                target = interaction.user
+                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
+                await interaction.reply({content:"Restarting...", ephemeral:true})
+                fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                client.destroy()
+                process.on("exit", function () {
+                    spawn('./update.sh',
+                    {
+                        cwd: process.cwd(),
+                        detached: true,
+                        stdio: "inherit"
+                    })
+                });
+                console.log("Restarting")
+                process.exit(0)
+                break
+            case "shutdown":
+                target = interaction.user
+                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
+                await interaction.reply({content:"GN", ephemeral:true})
+                fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                console.log("Shutted down")
+                client.destroy()
+                process.exit(0)
                 break;
         }
     }
@@ -166,139 +294,6 @@ client.on('interactionCreate', async interaction => {
 
                 if(!eco[target.id])await interaction.reply({content:"User doesn't have an account yet", ephemeral: true})
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
-                break;
-        }
-    }
-
-    else if (interaction.isCommand())
-    {
-
-        switch(commandName){
-            case "ping":
-                let sent = await interaction.reply({content:`Pong!`, ephemeral: true});
-                interaction.editReply(`Heartbeat: ${client.ws.ping}ms`/* , Lantency: ${sent.createdTimestamp - interaction.createdTimestamp}ms */)
-                break;
-            case "fluff":
-                await interaction.reply("https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif")
-                break;
-            case "balance":
-                target = interaction.options.getUser('target')
-                target = target?target:interaction.user
-                if(!eco[target.id])await interaction.reply({content:"User doesn't have an account yet", ephemeral: true})
-                else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
-                break;
-            case "shop":
-                embed = new MessageEmbed()
-                    .setColor('#29ff62')
-                    .setTitle('Epic Shop')
-                    .setDescription('Buy our incredibles gadgets')
-                    .setFooter({text:'Mina#3690', iconURL:'https://i.pinimg.com/originals/12/05/55/120555652bb1882e787375762b1bc012.gif'})
-                
-                let item = interaction.options.getString('item')
-                if(item&&shop[item]){
-                    embed.setTitle(item)
-                        .setDescription(`${shop[item].description}\n${shop[item].price}$${shop[item].quantita?"\n"+shop[item].quantita+" available":""}\n${shop[item].consumable?"Consunable":"Unic"}`)
-                    
-                    if(shop[item].image)embed.setThumbnail(shop[item].image)
-                }else{
-                    Object.keys(shop).forEach(item => {
-                        embed.addField(item+" - "+shop[item].price+"$", `${shop[item].description} | ${shop[item].quantita?shop[item].quantita+" available":""}`)
-                    });
-                }
-
-                await interaction.reply({embeds:[embed]})
-                break;
-            case "time-out":
-                await interaction.deferReply({ ephemeral: true });
-
-                target = interaction.options.getMember('target');
-                let durata = interaction.options.getInteger('time');
-                durata = durata?durata:1;
-                let unita = interaction.options.getString('unit');
-                unita = unita?unita:'m';
-                let reason = interaction.options.getString('reason');
-                reason = reason?reason:'';
-
-                if(!target.moderatable)
-                    return await interaction.editReply("I don't have enough permissions");
-
-                await target.disableCommunicationUntil(Date.now()+(ms(durata+unita)), reason)
-                .then(await interaction.editReply("Timeout succeded"))
-                .catch(async(err) => {
-                    console.log(err)
-                    await interaction.editReply(err)
-                    return;
-                })
-
-                embed.title = 'Moderation notify'
-                embed.author = {
-                    name: interaction.guild.name,
-                    icon_url: interaction.guild.iconURL({dynamic:true})
-                }
-                embed.color = 0xFF8F00
-                embed.description = `You got timeouted ${durata}${unita}, reason: \`${reason}\``
-                target.send({ embeds: [embed] });
-
-                embed.author = {
-                    name: interaction.user.tag,
-                    icon_url: interaction.user.displayAvatarURL({dynamic:true})
-                }
-                embed.description = `User: ${target},\ngot timeouted for \`${durata}${unita}\`,\nmoderator: ${interaction.user},\nreason: \`${reason}\``
-                
-                if(gConfig[interaction.guildId]["log-channel"]){
-                    await (await client.channels.fetch(gConfig[interaction.guildId]["log-channel"])).send({embeds:[embed]})
-                }
-                break;
-            case "set-log":
-                let logchan = interaction.options.getChannel('log-channel')
-
-                if(!logchan.isText())
-                {
-                    interaction.reply({content: "Invalid channel", ephemeral:true})
-                    break;
-                }
-                await logchan.sendTyping()
-                .then(() => {
-                    gConfig[interaction.guildId]["log-channel"] = logchan.id
-                    interaction.reply({content:`Log channel set as ${logchan}`, ephemeral:true})    
-                })
-                .catch(() => {
-                    interaction.reply({content:`I can't write in that channel`, ephemeral:true})
-                })
-                break;
-            case "save":
-                target = interaction.user
-                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
-                await interaction.deferReply({ephemeral:true})
-                fs.writeFileSync('./eco.json', JSON.stringify(eco))
-                fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
-                await interaction.editReply("Save complete")
-                break;
-            case "restart":
-                target = interaction.user
-                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
-                await interaction.reply({content:"Restarting...", ephemeral:true})
-                fs.writeFileSync('./eco.json', JSON.stringify(eco))
-                client.destroy()
-                process.on("exit", function () {
-                    spawn('./update.sh',
-                    {
-                        cwd: process.cwd(),
-                        detached: true,
-                        stdio: "inherit"
-                    })
-                });
-                console.log("Restarting")
-                process.exit(0)
-                break
-            case "shutdown":
-                target = interaction.user
-                if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
-                await interaction.reply({content:"GN", ephemeral:true})
-                fs.writeFileSync('./eco.json', JSON.stringify(eco))
-                console.log("Shutted down")
-                client.destroy()
-                process.exit(0)
                 break;
         }
     }
