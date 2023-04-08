@@ -1,6 +1,6 @@
 const process = require('node:process');
 const { spawn } = require('child_process');
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { EmbedBuilder } = require('@discordjs/builders');
 const ms = require('ms');
 const fs = require('fs');
@@ -17,20 +17,20 @@ var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube
 
 function activityLoop(){
     setTimeout(() => {
-        client.user.setActivity("There's no /help",{type:'LISTENING'})
+        client.user.setActivity("There's no /help",{type: ActivityType.Listening})
         client.user.setStatus("online")
 
         setTimeout(() => {
-          client.user.setActivity("prefix-> /", { type: "WATCHING" })
+          client.user.setActivity("prefix-> /", { type: ActivityType.Watching})
 
             setTimeout(() => {
-                client.user.setActivity("with Mina#3690",{type:'PLAYING'})
+                client.user.setActivity("with Mina#3690",{type: ActivityType.Playing})
                 client.user.setStatus("dnd")
 
                 setTimeout(() => {
                     let ar = videos.concat(music)
                     let rId = Math.floor(Math.random()*ar.length)
-                    client.user.setActivity("yooooooo",{type:'STREAMING', url:ar[rId]})
+                    client.user.setActivity("yooooooo",{type: ActivityType.Streaming, url:ar[rId]})
 
                     activityLoop();
                 }, 60000);
@@ -41,7 +41,7 @@ function activityLoop(){
 
 client.on('ready', async () => {
     console.log('Online')
-    client.user.setActivity("Starting...",{type:'COMPETING'})
+    client.user.setActivity("Starting...",{type: ActivityType.Competing})
     activityLoop();
 })
 
