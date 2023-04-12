@@ -7,7 +7,7 @@ const fs = require('fs');
 const { token, bOwner } = require('./config.json');
 const gConfig = require('./gConfig.json');
 
-const client = new Client({ intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildIntegrations, GatewayIntentBits.GuildVoiceStates] });
+const client = new Client({ intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildIntegrations, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 let eco = JSON.parse(fs.readFileSync('./eco.json'))
 let shop = JSON.parse(fs.readFileSync('./shop.json'))
@@ -72,6 +72,20 @@ client.on('guildMemberRemove', async member => {
     gConfig[member.guild.id]["memberBackup"][member.id]["roles"] = memberRoles
     gConfig[member.guild.id]["memberBackup"][member.id]["nickname"] = member.nickname
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
+})
+
+client.on('messageCreate', async message => {
+    let user = message.author
+    let member = message.member
+    let guild = message.guild
+
+    if (guild == "1041311173003448340" && user.id == "1033773149050900541"){
+        if (message.content.includes('l') || message.content.includes('L') || message.content.includes('r') || message.content.includes('R')){
+            message.reply("Bad kitty!");
+            if (member.moderatable)
+                member.timeout(60 * 1000)
+        }
+    }
 })
 
 client.on('interactionCreate', async interaction => {
