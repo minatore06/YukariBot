@@ -266,7 +266,7 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    else if(interaction.isUserContextMenu())
+    else if(interaction.isUserContextMenuCommand())
     {
 
         switch(commandName){
