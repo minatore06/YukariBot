@@ -9,6 +9,7 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 // Place your client and guild ids here
 const clientId = '985707232673034240';
 const guildId = '710132095338676315';
+const commandId = '';
 
 (async () =>{
 	for (const file of commandFiles) {
@@ -18,30 +19,37 @@ const guildId = '710132095338676315';
 
 	const rest = new REST({ version: '9' }).setToken(token);
 
-
- 	try {
+	/*  	try {
 		console.log('Started refreshing application (/) commands.');
-
+		
 		await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
-		);
-
-		console.log('Successfully reloaded application (/) commands.');
-	} catch (error) {
-		console.error(error);
-	}
-
-/*  	try {
+			);
+			
+			console.log('Successfully reloaded application (/) commands.');
+		} catch (error) {
+			console.error(error);
+		} */
+		
+	/*  	try {
 		console.log('Started refreshing guild application (/) commands.');
-
+		
 		await rest.put(
 			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: commands },
-		);
-
-		console.log('Successfully reloaded guild application (/) commands.');
-	} catch (error) {
-		console.error(error);
-	} */
+			);
+			
+			console.log('Successfully reloaded guild application (/) commands.');
+		} catch (error) {
+			console.error(error);
+			} */
+	/* 	rest.delete(Routes.applicationGuildCommand(clientId, guildId, commandId))
+			.then(() => console.log('Successfully deleted guild command'))
+			.catch(console.error);
+		*/
+	/* 	rest.delete(Routes.applicationCommand(clientId, commandId))
+			.then(() => console.log('Successfully deleted guild command'))
+			.catch(console.error);
+		*/
 })();
