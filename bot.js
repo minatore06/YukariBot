@@ -85,7 +85,7 @@ client.on('messageCreate', async message => {
         if (message.content.includes('l') || message.content.includes('L') || message.content.includes('r') || message.content.includes('R')){
             message.reply(badSent[sId]);
             if (member.moderatable)
-                member.timeout(1 * 60 * 1000)
+                member.timeout(2 * 60 * 1000)
         }
     }
 })
