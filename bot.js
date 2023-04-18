@@ -75,36 +75,20 @@ client.on('guildMemberRemove', async member => {
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
 
-client.on('messageCreate', async message => {
+/* client.on('messageCreate', async message => {
     let user = message.author
     let member = message.member
     let guild = message.guild
-    let sId = Math.floor(Math.random()*badSent.length)
 
-    if (guild == "1041311173003448340" && user.id == "1033773149050900541"){
-        if (message.content.includes('l') || message.content.includes('L') || message.content.includes('r') || message.content.includes('R')){
-            message.reply(badSent[sId]);
-            if (member.moderatable)
-                member.timeout(2 * 60 * 1000)
-        }
-    }
-})
+}) */
 
-client.on('messageUpdate', async (oldMSG, newMSG) => {
+/* client.on('messageUpdate', async (oldMSG, newMSG) => {
     let user = newMSG.author
     let member = newMSG.member
     let guild = newMSG.guild
-    let sId = Math.floor(Math.random()*badSent.length)
 
-    if (guild == "1041311173003448340" && user.id == "1033773149050900541"){
-        if (newMSG.content.includes('l') || newMSG.content.includes('L') || newMSG.content.includes('r') || newMSG.content.includes('R')){
-            newMSG.reply(badSent[sId]);
-            if (member.moderatable)
-                member.timeout(3 * 60 * 1000)
-        }
-    }
 })
-
+ */
 client.on('interactionCreate', async interaction => {
     let commandName = interaction.commandName;
     let target;
