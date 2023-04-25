@@ -2,3 +2,5 @@
 ./package-lock.json
 ./config.json
 ./gConfig.json
+./err.log
+./eco.json
