@@ -74,7 +74,7 @@ client.on('guildMemberRemove', async member => {
     gConfig[member.guild.id]["memberBackup"][member.id]["nickname"] = member.nickname
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
-
+/* 
 client.on('messageCreate', async message => {
     let user = message.author
     let member = message.member
@@ -88,8 +88,8 @@ client.on('messageCreate', async message => {
                 member.timeout(1 * 60 * 1000)
         }
     }
-})
-
+}) */
+/* 
 client.on('messageUpdate', async (oldMSG, newMSG) => {
     let user = newMSG.author
     let member = newMSG.member
@@ -103,7 +103,7 @@ client.on('messageUpdate', async (oldMSG, newMSG) => {
                 member.timeout(3 * 60 * 1000)
         }
     }
-})
+}) */
 
 client.on('interactionCreate', async interaction => {
     let commandName = interaction.commandName;
