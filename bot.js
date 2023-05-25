@@ -1,7 +1,7 @@
 const process = require('node:process');
 const { spawn } = require('child_process');
-const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
-const { EmbedBuilder } = require('@discordjs/builders');
+const { Client, GatewayIntentBits, ActivityType, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('@discordjs/builders');
 const ms = require('ms');
 const fs = require('fs');
 const { token, bOwner } = require('./config.json');
@@ -11,6 +11,7 @@ const client = new Client({ intents: [GatewayIntentBits.GuildPresences, GatewayI
 
 let eco = JSON.parse(fs.readFileSync('./eco.json'))
 let shop = JSON.parse(fs.readFileSync('./shop.json'))
+let pets = JSON.parse(fs.readFileSync('./pets.json'))
 let money = []
 var videos = ["https://www.youtube.com/watch?v=sAn7baRbhx4", "https://www.youtube.com/watch?v=VqB1uoDTdKM", "https://www.youtube.com/watch?v=olOfpzW50P8", "https://www.youtube.com/watch?v=bZe5J8SVCYQ", "https://www.youtube.com/watch?v=GjrrLtjeUVw", "https://www.youtube.com/watch?v=sfHvgPJPMXk", "https://www.youtube.com/watch?v=SmUC_kSw6eY", "https://www.youtube.com/watch?v=Jl6lee2wyPQ", "https://www.youtube.com/watch?v=nlLhw1mtCFA", "https://www.youtube.com/watch?v=ttCHb-MNIFE", "https://www.youtube.com/watch?v=dbn-QDttWqU", "https://www.youtube.com/watch?v=cn4M-fH08XY", "https://www.youtube.com/watch?v=mYb4UvVpaS8", "https://youtu.be/UIp6_0kct_U", "https://youtu.be/p88uRZ5zYMA", "https://youtu.be/JNz0ng19kuw", "https://youtu.be/VqkKokT5RpY", "https://youtu.be/K8T6Y7K-esM"]
 var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube.com/watch?v=12vh55_1ul8", "https://www.youtube.com/watch?v=f7tMeBGxIw4", "https://www.youtube.com/watch?v=0XFudmaObLI", "https://www.youtube.com/watch?v=FtutLA63Cp8", "https://www.youtube.com/watch?v=TKfS5zVfGBc", "https://www.youtube.com/watch?v=bAn6C4p7mAE", "https://www.youtube.com/watch?v=2Od7QCsyqkE", "https://www.youtube.com/watch?v=WUjxaXg8QKE", "https://www.youtube.com/watch?v=VEe_yIbW64w", "https://www.youtube.com/watch?v=IHENIg8Se7M", "https://www.youtube.com/watch?v=UnIhRpIT7nc", "https://www.youtube.com/watch?v=tyneiz9FRMw", "https://www.youtube.com/watch?v=7UubKYqEy3s", "https://www.youtube.com/watch?v=_VH91mivTUw", "https://www.youtube.com/watch?v=sToRddIV7kU", "https://www.youtube.com/watch?v=dyKdLLQP5PI", "https://www.youtube.com/watch?v=bl7W-sU-MKI", "https://www.youtube.com/watch?v=ioQLlX2ELbg", "https://youtu.be/6d-28nn_gpA", "https://youtu.be/-kBQ6lHKTEc", "https://youtu.be/qNIhngowViI", "https://youtu.be/--41OGPMurU", "https://youtu.be/8UVNT4wvIGY", "https://youtu.be/piEyKyJ4pFg", "https://youtu.be/Jrg9KxGNeJY", "https://youtu.be/tnAoq3_6f5M", "https://youtu.be/TwIssYH2Gyw", "https://youtu.be/z6EQlZaB7v8"]
@@ -74,12 +75,19 @@ client.on('guildMemberRemove', async member => {
     gConfig[member.guild.id]["memberBackup"][member.id]["nickname"] = member.nickname
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
 })
-/* 
+
 client.on('messageCreate', async message => {
     let user = message.author
     let member = message.member
     let guild = message.guild
-    let sId = Math.floor(Math.random()*badSent.length)
+/* 
+    if (guild.id == "1041311173003448340"){
+        if (message.content.toLowerCase().includes("cute")){
+            message.reply("Yeah, you won an hug!");
+            message.reply("https://tenor.com/view/hug-gif-25588769");
+        }
+    } */
+/*     let sId = Math.floor(Math.random()*badSent.length)
 
     if (guild.id == "1041311173003448340" && user.id == "984496581954920518"){    
         if (!message.content.toLowerCase().includes("nya") || message.content.includes("L") || message.content.includes("R") || message.content.includes("l") || message.content.includes("r")){
@@ -87,8 +95,8 @@ client.on('messageCreate', async message => {
             if (member.moderatable)
                 member.timeout(1 * 60 * 1000)
         }
-    }
-}) */
+    } */
+})
 /* 
 client.on('messageUpdate', async (oldMSG, newMSG) => {
     let user = newMSG.author
@@ -127,6 +135,31 @@ client.on('interactionCreate', async interaction => {
                 await interaction.respond(choices.map(choice => ({name:choice, value:choice})))
                     .catch((err) => console.log(err))
                 break;
+        }
+    }
+
+    else if (interaction.isButton()){
+        let intIDs = interaction.customId.split(':');
+        let owner = await interaction.guild.members.fetch(intIDs[2]);
+
+        if (intIDs[0] == "pet+y"){
+            if (interaction.user.id == intIDs[1]){
+                if (!pets[interaction.user.id]){
+                    pets[interaction.user.id] = intIDs[2];
+                    interaction.reply(`Hurra, ${interaction.user} is ${owner}'s new pet`);
+                } else {
+                    interaction.reply(`You already have an owner, you shouldn't even consider this!!!`);
+                }
+            }
+        }
+        else if (intIDs[0] == "pet+n"){
+            if (interaction.user.id == intIDs[1]){
+                if (!pets[interaction.user.id]){
+                    interaction.reply(`${owner} I'm sorry, ${interaction.user} refused your offer`);
+                } else {
+                    interaction.reply(`${interaction.user} I'm glad you refused ${owner}'s offer as you're already owned`);
+                }
+            }
         }
     }
 
@@ -187,6 +220,78 @@ client.on('interactionCreate', async interaction => {
                 }
                 
                 await interaction.reply({embeds:[embed]})
+                break;
+            case "own":
+                target = interaction.options.getUser('target');
+
+                if (target.id == interaction.user.id)
+                    return await interaction.reply({content:"You can't own yourself", ephemeral:true});
+                if (pets[target.id] == interaction.user.id)
+                    return await interaction.reply({content:`You already own ${target}`, ephemeral:true});
+                if (pets[target.id])
+                    return await interaction.reply({content:`${target} is already owned`, ephemeral:true});
+                let accept = new ButtonBuilder()
+                    .setCustomId("pet+y:"+target.id+":"+interaction.user.id)
+                    .setLabel("Accept")
+                    .setStyle(ButtonStyle.Success);
+                let refuse = new ButtonBuilder()
+                    .setCustomId("pet+n:"+target.id+":"+interaction.user.id)
+                    .setLabel("Refuse")
+                    .setStyle(ButtonStyle.Danger);
+                let row = new ActionRowBuilder()
+                    .addComponents(accept, refuse);
+
+                embed.title = 'Owning request';
+                embed.description = `${interaction.user} would like to own you ${target}, do you accept?`;
+                embed.author = {
+                    name:interaction.member.displayName,
+                    icon_url:interaction.member.displayAvatarURL({dynamic:true})
+                };
+                embed.color = 0x3fdb23;
+                embed.image = {
+                    url: "https://cdn4.vectorstock.com/i/1000x1000/16/53/handshake-businessmen-making-a-deal-vector-5721653.jpg"
+                };
+                await interaction.reply({embeds:[embed], components: [row]});
+                break;
+            case "free":
+                target = interaction.options.getUser('target');
+                if (pets[target.id]){
+                    if (pets[target.id] == interaction.user.id){
+                        pets[target.id] = null;
+                        interaction.reply({content:`${target} is now free`});
+                    } else {
+                        interaction.reply({content:`${target} is not your pet`, ephemeral:true});
+                    }
+                } else {
+                    interaction.reply({content:`${target} is not owned`, ephemeral:true});
+                }
+                break;
+            case "list-pets":
+                target = interaction.options.getUser('target');
+                let s = "";
+                let owners = {};
+                let fields = [];
+
+                Object.keys(pets).forEach(pet => {
+                    if (target && pets[pet] != target.id)
+                        return;
+                    if (!pets[pet])
+                        return;
+                    if (!owners[pets[pet]])
+                        owners[pets[pet]] = [];
+                    owners[pets[pet]].push(pet);
+                });
+                await Object.keys(owners).forEach(async (owner) => {
+                    owners[owner].forEach(async (pet) => {
+                        s += `|>${await interaction.guild.members.fetch(pet)}\n`;
+                    });
+                    fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
+                    s = "";
+                });
+                embed.title = 'Pets list';
+                embed.fields = fields;
+                embed.color = 0x130be6;
+                await interaction.reply({embeds:[embed]});
                 break;
             case "time-out":
                 await interaction.deferReply({ ephemeral: true });
@@ -251,6 +356,7 @@ client.on('interactionCreate', async interaction => {
                 if(target.id!=bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
                 await interaction.deferReply({ephemeral:true})
                 fs.writeFileSync('./eco.json', JSON.stringify(eco))
+                fs.writeFileSync('./pets.json', JSON.stringify(pets))
                 fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
                 await interaction.editReply("Save complete")
                 break;
@@ -326,6 +432,51 @@ client.on('interactionCreate', async interaction => {
                 if(!eco[target.id])await interaction.reply({content:"User doesn't have an account yet", ephemeral: true})
                 else await interaction.reply({content:eco[target.id]+"$", ephemeral: true})
                 break;
+            case "own":
+                target = interaction.targetUser;
+
+                if (target.id == interaction.user.id)
+                    return await interaction.reply({content:"You can't own yourself", ephemeral:true});
+                if (pets[target.id] == interaction.user.id)
+                    return await interaction.reply({content:`You already own ${target}`, ephemeral:true});
+                if (pets[target.id])
+                    return await interaction.reply({content:`${target} is already owned`, ephemeral:true});
+                let accept = new ButtonBuilder()
+                    .setCustomId("pet+y:"+target.id+":"+interaction.user.id)
+                    .setLabel("Accept")
+                    .setStyle(ButtonStyle.Success);
+                let refuse = new ButtonBuilder()
+                    .setCustomId("pet+n:"+target.id+":"+interaction.user.id)
+                    .setLabel("Refuse")
+                    .setStyle(ButtonStyle.Danger);
+                let row = new ActionRowBuilder()
+                    .addComponents(accept, refuse);
+
+                embed.title = 'Owning request';
+                embed.description = `${interaction.user} would like to own you ${target}, do you accept?`;
+                embed.author = {
+                    name:interaction.member.displayName,
+                    icon_url:interaction.member.displayAvatarURL({dynamic:true})
+                };
+                embed.color = 0x3fdb23;
+                embed.image = {
+                    url: "https://cdn4.vectorstock.com/i/1000x1000/16/53/handshake-businessmen-making-a-deal-vector-5721653.jpg"
+                };
+                await interaction.reply({embeds:[embed], components: [row]});
+                break;
+            case "free":
+                target = interaction.targetUser;
+                if (pets[target.id]){
+                    if (pets[target.id] == interaction.user.id){
+                        pets[target.id] = null;
+                        interaction.reply({content:`${target} is now free`});
+                    } else {
+                        interaction.reply({content:`${target} is not your pet`, ephemeral:true});
+                    }
+                } else {
+                    interaction.reply({content:`${target} is not owned`, ephemeral:true});
+                }
+                break;
         }
     }
 });
@@ -359,4 +510,5 @@ process.on('uncaughtException', (err, origin) => {
 process.on('exit', (code) => {
     fs.writeFileSync('./eco.json', JSON.stringify(eco))
     fs.writeFileSync('./gConfig.json', JSON.stringify(gConfig))
+    fs.writeFileSync('./pets.json', JSON.stringify(pets))
 });

@@ -4,11 +4,11 @@ const { token } = require('./config.json');
 const fs = require('fs');
 
 const commands = [];
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('listPets.js'));
 
 // Place your client and guild ids here
 const clientId = '985707232673034240';
-const guildId = '710132095338676315';
+const guildId = '1041311173003448340';
 const commandId = '';
 
 (async () =>{
@@ -32,7 +32,7 @@ const commandId = '';
 			console.error(error);
 		} */
 		
-	/*  	try {
+/* 	 	try {
 		console.log('Started refreshing guild application (/) commands.');
 		
 		await rest.put(
@@ -44,10 +44,10 @@ const commandId = '';
 		} catch (error) {
 			console.error(error);
 			} */
-	/* 	rest.delete(Routes.applicationGuildCommand(clientId, guildId, commandId))
+/* 		rest.delete(Routes.applicationGuildCommand(clientId, guildId, commandId))
 			.then(() => console.log('Successfully deleted guild command'))
 			.catch(console.error);
-		*/
+		 */
 	/* 	rest.delete(Routes.applicationCommand(clientId, commandId))
 			.then(() => console.log('Successfully deleted guild command'))
 			.catch(console.error);
