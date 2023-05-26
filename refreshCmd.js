@@ -4,7 +4,7 @@ const { token } = require('./config.json');
 const fs = require('fs');
 
 const commands = [];
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('listPets.js'));
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 // Place your client and guild ids here
 const clientId = '985707232673034240';
@@ -16,6 +16,19 @@ const commandId = '';
 		let command = await require(`./commands/${file}`);
 		commands.push(command.data.toJSON());
 	}
+/* 	let command;
+	command = await require(`./commands/own.js`);
+	commands.push(command.data.toJSON());
+	command = await require(`./commands/free.js`);
+	commands.push(command.data.toJSON());
+	command = await require(`./commands/listPets.js`);
+	commands.push(command.data.toJSON());
+	command = await require(`./commands/UCMown.js`);
+	commands.push(command.data.toJSON());
+	command = await require(`./commands/UCMfree.js`);
+	commands.push(command.data.toJSON());
+	command = await require(`./commands/UCMlistPets.js`);
+	commands.push(command.data.toJSON()); */
 
 	const rest = new REST({ version: '9' }).setToken(token);
 

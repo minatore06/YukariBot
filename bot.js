@@ -268,6 +268,7 @@ client.on('interactionCreate', async interaction => {
                 break;
             case "list-pets":
                 target = interaction.options.getUser('target');
+                let i;
                 let s = "";
                 let owners = {};
                 let fields = [];
@@ -281,13 +282,15 @@ client.on('interactionCreate', async interaction => {
                         owners[pets[pet]] = [];
                     owners[pets[pet]].push(pet);
                 });
-                await Object.keys(owners).forEach(async (owner) => {
-                    owners[owner].forEach(async (pet) => {
-                        s += `|>${await interaction.guild.members.fetch(pet)}\n`;
-                    });
+                for (const owner of Object.keys(owners)) {
+                    i = 0;
+                    while (owners[owner][i]) {
+                        s += `|>${await interaction.guild.members.fetch(owners[owner][i])}\n`;
+                        i++;
+                    }
                     fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
                     s = "";
-                });
+                }
                 embed.title = 'Pets list';
                 embed.fields = fields;
                 embed.color = 0x130be6;
@@ -476,6 +479,36 @@ client.on('interactionCreate', async interaction => {
                 } else {
                     interaction.reply({content:`${target} is not owned`, ephemeral:true});
                 }
+                break;
+            case "list-pets":
+                target = interaction.targetUser;
+                let i;
+                let s = "";
+                let owners = {};
+                let fields = [];
+
+                Object.keys(pets).forEach(pet => {
+                    if (pets[pet] != target.id)
+                        return;
+                    if (!pets[pet])
+                        return;
+                    if (!owners[pets[pet]])
+                        owners[pets[pet]] = [];
+                    owners[pets[pet]].push(pet);
+                });
+                for (const owner of Object.keys(owners)) {
+                    i = 0;
+                    while (owners[owner][i]) {
+                        s += `|>${await interaction.guild.members.fetch(owners[owner][i])}\n`;
+                        i++;
+                    }
+                    fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
+                    s = "";
+                }
+                embed.title = 'Pets list';
+                embed.fields = fields;
+                embed.color = 0x130be6;
+                await interaction.reply({embeds:[embed]});
                 break;
         }
     }
