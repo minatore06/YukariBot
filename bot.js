@@ -294,6 +294,9 @@ client.on('interactionCreate', async interaction => {
                 embed.title = 'Pets list';
                 embed.fields = fields;
                 embed.color = 0x130be6;
+                console.log(fields);
+                if (!fields.length)
+                    return await interaction.reply({content:`${target?target:"Everyone"} has no pets`, ephemeral:true});
                 await interaction.reply({embeds:[embed]});
                 break;
             case "time-out":
@@ -508,6 +511,8 @@ client.on('interactionCreate', async interaction => {
                 embed.title = 'Pets list';
                 embed.fields = fields;
                 embed.color = 0x130be6;
+                if (!fields.length)
+                    return await interaction.reply({content:`${target} has no pets`, ephemeral:true});
                 await interaction.reply({embeds:[embed]});
                 break;
         }
