@@ -233,6 +233,8 @@ client.on('interactionCreate', async interaction => {
 
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
+                if (pets[interaction.user.id] == target.id)
+                    return await interaction.reply({content:"You can't own your owner", ephemeral:true});
                 if (pets[target.id] == interaction.user.id)
                     return await interaction.reply({content:`You already own ${target}`, ephemeral:true});
                 if (pets[target.id])
