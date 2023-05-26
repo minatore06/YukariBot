@@ -150,7 +150,11 @@ client.on('interactionCreate', async interaction => {
                 } else {
                     interaction.reply(`You already have an owner, you shouldn't even consider this!!!`);
                 }
-            }
+                interaction.message.delete()
+                    .catch(console.error);
+            } else
+                interaction.reply(`You are not part of this deal`);
+
         }
         else if (intIDs[0] == "pet+n"){
             if (interaction.user.id == intIDs[1]){
@@ -159,7 +163,10 @@ client.on('interactionCreate', async interaction => {
                 } else {
                     interaction.reply(`${interaction.user} I'm glad you refused ${owner}'s offer as you're already owned`);
                 }
-            }
+                interaction.message.delete()
+                    .catch(console.error);
+            } else
+                interaction.reply(`You are not part of this deal`);
         }
     }
 
