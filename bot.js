@@ -148,12 +148,12 @@ client.on('interactionCreate', async interaction => {
                     pets[interaction.user.id] = intIDs[2];
                     interaction.reply(`Hurra, ${interaction.user} is ${owner}'s new pet`);
                 } else {
-                    interaction.reply(`You already have an owner, you shouldn't even consider this!!!`);
+                    interaction.reply(`${interaction.user} You already have an owner, you shouldn't even consider this!!!`);
                 }
                 interaction.message.delete()
                     .catch(console.error);
             } else
-                interaction.reply(`You are not part of this deal`);
+                interaction.reply({content:`You are not part of this deal`, ephemeral:true});
 
         }
         else if (intIDs[0] == "pet+n"){
@@ -166,7 +166,7 @@ client.on('interactionCreate', async interaction => {
                 interaction.message.delete()
                     .catch(console.error);
             } else
-                interaction.reply(`You are not part of this deal`);
+                interaction.reply({content:`You are not part of this deal`, ephemeral:true});
         }
     }
 
