@@ -279,7 +279,6 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.options.getUser('target');
                 let i;
                 let s = "";
-                let user;
                 let owners = {};
                 let fields = [];
 
@@ -295,9 +294,11 @@ client.on('interactionCreate', async interaction => {
                 for (const owner of Object.keys(owners)) {
                     i = 0;
                     while (owners[owner][i]) {
-                        user = await interaction.guild.members.fetch(owners[owner][i]);
-                        if (user)
-                            s += `|>${user}\n`;
+                        try {
+                            s += `|>${await interaction.guild.members.fetch(owners[owner][i])}\n`;
+                        } catch (error) {
+                            s += `|>(LOST PET)`
+                        }
                         i++;
                     }
                     fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
@@ -499,7 +500,6 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.targetUser;
                 let i;
                 let s = "";
-                let user;
                 let owners = {};
                 let fields = [];
 
@@ -515,9 +515,11 @@ client.on('interactionCreate', async interaction => {
                 for (const owner of Object.keys(owners)) {
                     i = 0;
                     while (owners[owner][i]) {
-                        user = await interaction.guild.members.fetch(owners[owner][i]);
-                        if (user)
-                            s += `|>${user}\n`;
+                        try {
+                            s += `|>${await interaction.guild.members.fetch(owners[owner][i])}\n`;
+                        } catch (error) {
+                            s += `|>(LOST PET)`
+                        }
                         i++;
                     }
                     fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
