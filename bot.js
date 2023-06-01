@@ -258,7 +258,7 @@ client.on('interactionCreate', async interaction => {
                 };
                 embed.color = 0x3fdb23;
                 embed.image = {
-                    url: "https://cdn4.vectorstock.com/i/1000x1000/16/53/handshake-businessmen-making-a-deal-vector-5721653.jpg"
+                    url: "https://cdn.donmai.us/sample/1f/20/__hiroi_kikuri_and_pa_san_bocchi_the_rock_drawn_by_aoki_shizumi__sample-1f206cf81871e8acafff0fbcfaf89c4f.jpg"
                 };
                 await interaction.reply({embeds:[embed], components: [row]});
                 break;
@@ -479,7 +479,7 @@ client.on('interactionCreate', async interaction => {
                 };
                 embed.color = 0x3fdb23;
                 embed.image = {
-                    url: "https://cdn4.vectorstock.com/i/1000x1000/16/53/handshake-businessmen-making-a-deal-vector-5721653.jpg"
+                    url: "https://cdn.donmai.us/sample/1f/20/__hiroi_kikuri_and_pa_san_bocchi_the_rock_drawn_by_aoki_shizumi__sample-1f206cf81871e8acafff0fbcfaf89c4f.jpg"
                 };
                 await interaction.reply({embeds:[embed], components: [row]});
                 break;
