@@ -246,8 +246,9 @@ client.on('interactionCreate', async interaction => {
             case "own":
                 target = interaction.options.getUser('target');
 
-                if (petsCooldown[interaction.user.id])
-                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60 * 1000)}:R>`, ephemeral:true});
+                if (petsCooldown[interaction.user.id]){
+                    console.log(`${petsCooldown[interaction.user.id]}`);
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60)}:R>`, ephemeral:true});}
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[interaction.user.id] == target.id)
@@ -278,10 +279,10 @@ client.on('interactionCreate', async interaction => {
                     url: "https://cdn.donmai.us/sample/1f/20/__hiroi_kikuri_and_pa_san_bocchi_the_rock_drawn_by_aoki_shizumi__sample-1f206cf81871e8acafff0fbcfaf89c4f.jpg"
                 };
                 await interaction.reply({embeds:[embed], components: [row]});
-                petsCooldown[interaction.user.id] = Date.now();
+                petsCooldown[interaction.user.id] = Math.floor(Date.now() / 1000);
                 setTimeout(() => {
                     delete petsCooldown[interaction.user.id];
-                }, 2 * 60 * 60 * 1000);
+                }, ms('2h'));
                 break;
             case "free":
                 target = interaction.options.getUser('target');
@@ -476,8 +477,7 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.targetUser;
 
                 if (petsCooldown[interaction.user.id]){
-                    console.log(`${petsCooldown[interaction.user.id]}`);
-                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60)}:R>`, ephemeral:true});}
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60)}:R>`, ephemeral:true});}
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[target.id] == interaction.user.id)
@@ -509,7 +509,7 @@ client.on('interactionCreate', async interaction => {
                 petsCooldown[interaction.user.id] = Math.floor(Date.now() / 1000);
                 setTimeout(() => {
                     delete petsCooldown[interaction.user.id];
-                }, ms('2m'));
+                }, ms('2h'));
                 break;
             case "free":
                 target = interaction.targetUser;
