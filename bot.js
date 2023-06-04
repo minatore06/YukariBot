@@ -9,6 +9,7 @@ const gConfig = require('./gConfig.json');
 
 const client = new Client({ intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildIntegrations, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
+let debug = false;
 let eco = JSON.parse(fs.readFileSync('./eco.json'))
 let shop = JSON.parse(fs.readFileSync('./shop.json'))
 let pets = JSON.parse(fs.readFileSync('./pets.json'))
@@ -97,6 +98,18 @@ client.on('messageCreate', async message => {
                 member.timeout(1 * 60 * 1000)
         }
     } */
+    if (message.content == "!debug" && message.author.id == bOwner){
+        if (!debug)
+        {
+            debug = true;
+            message.reply("El psy congroo");
+        }
+        else
+        {
+            debug = false;
+            message.reply("I'm back");
+        }
+    }
 })
 /* 
 client.on('messageUpdate', async (oldMSG, newMSG) => {
@@ -126,7 +139,8 @@ client.on('interactionCreate', async interaction => {
         timestamp: new Date().toISOString()
     };
 
-
+    if (debug)
+        return;
     if(interaction.isAutocomplete()){
         let focused = interaction.options.getFocused(true)
 
@@ -461,8 +475,9 @@ client.on('interactionCreate', async interaction => {
             case "own":
                 target = interaction.targetUser;
 
-                if (petsCooldown[interaction.user.id])
-                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60)}:R>`, ephemeral:true});
+                if (petsCooldown[interaction.user.id]){
+                    console.log(`${petsCooldown[interaction.user.id]}`);
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60)}:R>`, ephemeral:true});}
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[target.id] == interaction.user.id)
