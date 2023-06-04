@@ -462,7 +462,7 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.targetUser;
 
                 if (petsCooldown[interaction.user.id])
-                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + ms('2h')}:R>`, ephemeral:true});
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (ms('2h') / 1000)}:R>`, ephemeral:true});
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[target.id] == interaction.user.id)
