@@ -246,9 +246,8 @@ client.on('interactionCreate', async interaction => {
             case "own":
                 target = interaction.options.getUser('target');
 
-                if (petsCooldown[interaction.user.id]){
-                    console.log(`${petsCooldown[interaction.user.id]}`);
-                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60)}:R>`, ephemeral:true});}
+                if (petsCooldown[interaction.user.id])
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60)}:R>`, ephemeral:true});
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[interaction.user.id] == target.id)
