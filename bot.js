@@ -16,6 +16,7 @@ let money = []
 var videos = ["https://www.youtube.com/watch?v=sAn7baRbhx4", "https://www.youtube.com/watch?v=VqB1uoDTdKM", "https://www.youtube.com/watch?v=olOfpzW50P8", "https://www.youtube.com/watch?v=bZe5J8SVCYQ", "https://www.youtube.com/watch?v=GjrrLtjeUVw", "https://www.youtube.com/watch?v=sfHvgPJPMXk", "https://www.youtube.com/watch?v=SmUC_kSw6eY", "https://www.youtube.com/watch?v=Jl6lee2wyPQ", "https://www.youtube.com/watch?v=nlLhw1mtCFA", "https://www.youtube.com/watch?v=ttCHb-MNIFE", "https://www.youtube.com/watch?v=dbn-QDttWqU", "https://www.youtube.com/watch?v=cn4M-fH08XY", "https://www.youtube.com/watch?v=mYb4UvVpaS8", "https://youtu.be/UIp6_0kct_U", "https://youtu.be/p88uRZ5zYMA", "https://youtu.be/JNz0ng19kuw", "https://youtu.be/VqkKokT5RpY", "https://youtu.be/K8T6Y7K-esM"]
 var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube.com/watch?v=12vh55_1ul8", "https://www.youtube.com/watch?v=f7tMeBGxIw4", "https://www.youtube.com/watch?v=0XFudmaObLI", "https://www.youtube.com/watch?v=FtutLA63Cp8", "https://www.youtube.com/watch?v=TKfS5zVfGBc", "https://www.youtube.com/watch?v=bAn6C4p7mAE", "https://www.youtube.com/watch?v=2Od7QCsyqkE", "https://www.youtube.com/watch?v=WUjxaXg8QKE", "https://www.youtube.com/watch?v=VEe_yIbW64w", "https://www.youtube.com/watch?v=IHENIg8Se7M", "https://www.youtube.com/watch?v=UnIhRpIT7nc", "https://www.youtube.com/watch?v=tyneiz9FRMw", "https://www.youtube.com/watch?v=7UubKYqEy3s", "https://www.youtube.com/watch?v=_VH91mivTUw", "https://www.youtube.com/watch?v=sToRddIV7kU", "https://www.youtube.com/watch?v=dyKdLLQP5PI", "https://www.youtube.com/watch?v=bl7W-sU-MKI", "https://www.youtube.com/watch?v=ioQLlX2ELbg", "https://youtu.be/6d-28nn_gpA", "https://youtu.be/-kBQ6lHKTEc", "https://youtu.be/qNIhngowViI", "https://youtu.be/--41OGPMurU", "https://youtu.be/8UVNT4wvIGY", "https://youtu.be/piEyKyJ4pFg", "https://youtu.be/Jrg9KxGNeJY", "https://youtu.be/tnAoq3_6f5M", "https://youtu.be/TwIssYH2Gyw", "https://youtu.be/z6EQlZaB7v8"]
 var badSent = [`Bad kitty!`, `Shut up, stupid kitty!`, `"Meow meow meow", that's all I hear`, `When will you learn....`, `If you disobey me, I will be forced to punish you...`, `Shut up, that mouth is only good for licking`, `Why are you being so naughty?`, `I can take care of that attitude`, `You'll regret saying that`, `Remember who is in charge`, `Assume the position`]
+var petsCooldown = {}
 
 function activityLoop(){
     setTimeout(() => {
@@ -231,6 +232,8 @@ client.on('interactionCreate', async interaction => {
             case "own":
                 target = interaction.options.getUser('target');
 
+                if (petsCooldown[interaction.user.id])
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60 * 1000)}:R>`, ephemeral:true});
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[interaction.user.id] == target.id)
@@ -261,6 +264,10 @@ client.on('interactionCreate', async interaction => {
                     url: "https://cdn.donmai.us/sample/1f/20/__hiroi_kikuri_and_pa_san_bocchi_the_rock_drawn_by_aoki_shizumi__sample-1f206cf81871e8acafff0fbcfaf89c4f.jpg"
                 };
                 await interaction.reply({embeds:[embed], components: [row]});
+                petsCooldown[interaction.user.id] = Date.now();
+                setTimeout(() => {
+                    delete petsCooldown[interaction.user.id];
+                }, 2 * 60 * 60 * 1000);
                 break;
             case "free":
                 target = interaction.options.getUser('target');
@@ -454,6 +461,8 @@ client.on('interactionCreate', async interaction => {
             case "own":
                 target = interaction.targetUser;
 
+                if (petsCooldown[interaction.user.id])
+                    return await interaction.reply({content:`You are on cooldown, you can use it again <t:${petsCooldown[interaction.user.id] + (2 * 60 * 60 * 1000)}:R>`, ephemeral:true});
                 if (target.id == interaction.user.id)
                     return await interaction.reply({content:"You can't own yourself", ephemeral:true});
                 if (pets[target.id] == interaction.user.id)
@@ -482,6 +491,10 @@ client.on('interactionCreate', async interaction => {
                     url: "https://cdn.donmai.us/sample/1f/20/__hiroi_kikuri_and_pa_san_bocchi_the_rock_drawn_by_aoki_shizumi__sample-1f206cf81871e8acafff0fbcfaf89c4f.jpg"
                 };
                 await interaction.reply({embeds:[embed], components: [row]});
+                petsCooldown[interaction.user.id] = Date.now();
+                setTimeout(() => {
+                    delete petsCooldown[interaction.user.id];
+                }, 2 * 60 * 60 * 1000);
                 break;
             case "free":
                 target = interaction.targetUser;
