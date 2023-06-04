@@ -491,7 +491,7 @@ client.on('interactionCreate', async interaction => {
                     url: "https://cdn.donmai.us/sample/1f/20/__hiroi_kikuri_and_pa_san_bocchi_the_rock_drawn_by_aoki_shizumi__sample-1f206cf81871e8acafff0fbcfaf89c4f.jpg"
                 };
                 await interaction.reply({embeds:[embed], components: [row]});
-                petsCooldown[interaction.user.id] = Date.now();
+                petsCooldown[interaction.user.id] = Math.floor(Date.now() / 1000);
                 setTimeout(() => {
                     delete petsCooldown[interaction.user.id];
                 }, ms('2m'));
