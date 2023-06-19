@@ -300,6 +300,7 @@ client.on('interactionCreate', async interaction => {
                 target = interaction.options.getUser('target');
                 let i;
                 let s = "";
+                let ss = "";
                 let owners = {};
                 let fields = [];
 
@@ -322,7 +323,15 @@ client.on('interactionCreate', async interaction => {
                         }
                         i++;
                     }
-                    fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
+                    try {
+                        ss = await interaction.guild.members.fetch(owner);
+                        ss = ss.displayName;
+                    } catch (error) {
+                        ss = "Lost Owner";
+                        if (owner == "646749309773152260")
+                            ss = "Jungyl :(";
+                    }
+                    fields.push({ name: `${ss}`, value: s });
                     s = "";
                 }
                 embed.title = 'Pets list';
