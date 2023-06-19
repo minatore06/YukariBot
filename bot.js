@@ -319,7 +319,7 @@ client.on('interactionCreate', async interaction => {
                         try {
                             s += `|>${await interaction.guild.members.fetch(owners[owner][i])}\n`;
                         } catch (error) {
-                            s += `|>(LOST PET)`
+                            s += `|>(LOST PET)\n`
                         }
                         i++;
                     }
