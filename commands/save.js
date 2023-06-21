@@ -1,7 +1,19 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const fs = require('fs');
 
 module.exports = {
-    data:new SlashCommandBuilder()
+	name:'save',
+	data:new SlashCommandBuilder()
 	    .setName('save')
 	    .setDescription('You don\'t know'),
+	async execute(interaction, client, files)
+	{
+		let target = interaction.user
+		if(target.id!=files.config.bOwner)return await interaction.reply({content:"El psy kongroo!", ephemeral:true})
+		await interaction.deferReply({ephemeral:true})
+		fs.writeFileSync('./eco.json', JSON.stringify(files.eco))
+		fs.writeFileSync('./pets.json', JSON.stringify(files.pets))
+		fs.writeFileSync('./gConfig.json', JSON.stringify(files.gConfig))
+		await interaction.editReply("Save complete")
+	}
 }
