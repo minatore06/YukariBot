@@ -333,7 +333,7 @@ client.on('interactionCreate', async interaction => {
                         if (owner == "646749309773152260")
                             ss = "Jungyl :(";
                     }
-                    if (s.length())
+                    if (s.length)
                         fields.push({ name: `${ss}`, value: s });
                     s = "";
                 }
@@ -561,7 +561,7 @@ client.on('interactionCreate', async interaction => {
                         }
                         i++;
                     }
-                    if (s.length())
+                    if (s.length)
                         fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
                     s = "";
                 }
