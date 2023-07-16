@@ -41,7 +41,7 @@ module.exports = {
                 try {
                     s += `|>${await interaction.guild.members.fetch(owners[owner][i])}\n`;
                 } catch (error) {
-                    s += `|>(LOST PET)\n`
+                    s += ``
                 }
                 i++;
             }
