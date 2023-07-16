@@ -53,7 +53,8 @@ module.exports = {
                 if (owner == "646749309773152260")
                     ss = "Jungyl :(";
             }
-            fields.push({ name: `${ss}`, value: s });
+            if (s.length())
+                fields.push({ name: `${ss}`, value: s });
             s = "";
         }
         embed.title = 'Pets list';

@@ -333,7 +333,8 @@ client.on('interactionCreate', async interaction => {
                         if (owner == "646749309773152260")
                             ss = "Jungyl :(";
                     }
-                    fields.push({ name: `${ss}`, value: s });
+                    if (s.length())
+                        fields.push({ name: `${ss}`, value: s });
                     s = "";
                 }
                 embed.title = 'Pets list';
@@ -560,7 +561,8 @@ client.on('interactionCreate', async interaction => {
                         }
                         i++;
                     }
-                    fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
+                    if (s.length())
+                        fields.push({ name: `${(await interaction.guild.members.fetch(owner)).displayName}`, value: s });
                     s = "";
                 }
                 embed.title = 'Pets list';
