@@ -114,16 +114,20 @@ client.on('messageCreate', async message => {
             message.reply("I'm back");
         }
     } else if (guild.id == "1041311173003448340" && channel.id == "1132639879021482044"){
-        if (sos) {
-            sos.delete();
-            sos = null
-        }
         if (user.id == "302050872383242240") {
+            if (sos) {
+                sos.delete();
+                sos = null
+            }
             setTimeout(() => {
                 sos = message.channel.send("Bump ready")
             }, ms('2h'))
         }
-        message.delete()
+        if (user.id != "985707232673034240") {
+            setTimeout(() => {
+                message.delete()
+            }, ms('10s'))
+        }
     }
 })
 /* 
