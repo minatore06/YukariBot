@@ -84,6 +84,8 @@ client.on('messageCreate', async message => {
     let user = message.author
     let member = message.member
     let guild = message.guild
+    let channel = message.channel
+    let sos = NULL;
 /* 
     if (guild.id == "1041311173003448340"){
         if (message.content.toLowerCase().includes("cute")){
@@ -100,7 +102,7 @@ client.on('messageCreate', async message => {
                 member.timeout(1 * 60 * 1000)
         }
     } */
-    if (message.content == "!debug" && message.author.id == bOwner){
+    if (message.content == "!debug" && user.id == bOwner){
         if (!debug)
         {
             debug = true;
@@ -111,6 +113,15 @@ client.on('messageCreate', async message => {
             debug = false;
             message.reply("I'm back");
         }
+    } else if (guild.id == "1041311173003448340" && channel.id == "1132639879021482044"){
+        if (sos)
+            sos.delete();
+        if (user.id == "302050872383242240") {
+            setTimeout(() => {
+                sos = message.channel.send("Bump ready")
+            }, ms('2h'))
+        }
+        message.delete()
     }
 })
 /* 
