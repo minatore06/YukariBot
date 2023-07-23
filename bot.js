@@ -85,7 +85,7 @@ client.on('messageCreate', async message => {
     let member = message.member
     let guild = message.guild
     let channel = message.channel
-    let sos = NULL;
+    let sos = null
 /* 
     if (guild.id == "1041311173003448340"){
         if (message.content.toLowerCase().includes("cute")){
@@ -114,8 +114,10 @@ client.on('messageCreate', async message => {
             message.reply("I'm back");
         }
     } else if (guild.id == "1041311173003448340" && channel.id == "1132639879021482044"){
-        if (sos)
+        if (sos) {
             sos.delete();
+            sos = null
+        }
         if (user.id == "302050872383242240") {
             setTimeout(() => {
                 sos = message.channel.send("Bump ready")
