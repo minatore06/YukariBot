@@ -20,6 +20,7 @@ var videos = ["https://www.youtube.com/watch?v=sAn7baRbhx4", "https://www.youtub
 var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube.com/watch?v=12vh55_1ul8", "https://www.youtube.com/watch?v=f7tMeBGxIw4", "https://www.youtube.com/watch?v=0XFudmaObLI", "https://www.youtube.com/watch?v=FtutLA63Cp8", "https://www.youtube.com/watch?v=TKfS5zVfGBc", "https://www.youtube.com/watch?v=bAn6C4p7mAE", "https://www.youtube.com/watch?v=2Od7QCsyqkE", "https://www.youtube.com/watch?v=WUjxaXg8QKE", "https://www.youtube.com/watch?v=VEe_yIbW64w", "https://www.youtube.com/watch?v=IHENIg8Se7M", "https://www.youtube.com/watch?v=UnIhRpIT7nc", "https://www.youtube.com/watch?v=tyneiz9FRMw", "https://www.youtube.com/watch?v=7UubKYqEy3s", "https://www.youtube.com/watch?v=_VH91mivTUw", "https://www.youtube.com/watch?v=sToRddIV7kU", "https://www.youtube.com/watch?v=dyKdLLQP5PI", "https://www.youtube.com/watch?v=bl7W-sU-MKI", "https://www.youtube.com/watch?v=ioQLlX2ELbg", "https://youtu.be/6d-28nn_gpA", "https://youtu.be/-kBQ6lHKTEc", "https://youtu.be/qNIhngowViI", "https://youtu.be/--41OGPMurU", "https://youtu.be/8UVNT4wvIGY", "https://youtu.be/piEyKyJ4pFg", "https://youtu.be/Jrg9KxGNeJY", "https://youtu.be/tnAoq3_6f5M", "https://youtu.be/TwIssYH2Gyw", "https://youtu.be/z6EQlZaB7v8"]
 var badSent = [`Bad kitty!`, `Shut up, stupid kitty!`, `"Meow meow meow", that's all I hear`, `When will you learn....`, `If you disobey me, I will be forced to punish you...`, `Shut up, that mouth is only good for licking`, `Why are you being so naughty?`, `I can take care of that attitude`, `You'll regret saying that`, `Remember who is in charge`, `Assume the position`]
 var petsCooldown = {}
+var bumpMsg = null
 
 function activityLoop(){
     setTimeout(() => {
@@ -85,7 +86,6 @@ client.on('messageCreate', async message => {
     let member = message.member
     let guild = message.guild
     let channel = message.channel
-    let sos = null
 /* 
     if (guild.id == "1041311173003448340"){
         if (message.content.toLowerCase().includes("cute")){
@@ -115,12 +115,12 @@ client.on('messageCreate', async message => {
         }
     } else if (guild.id == "1041311173003448340" && channel.id == "1132639879021482044"){
         if (user.id == "302050872383242240") {
-            if (sos) {
-                sos.delete();
-                sos = null
+            if (bumpMsg) {
+                bumpMsg.delete();
+                bumpMsg = null
             }
             setTimeout(() => {
-                sos = message.channel.send("Bump ready")
+                bumpMsg = message.channel.send("Bump ready")
             }, ms('2h'))
         }
         if (user.id != "985707232673034240") {
