@@ -21,6 +21,9 @@ var music = ["https://www.youtube.com/watch?v=Q9WcG0OMElo", "https://www.youtube
 var badSent = [`Bad kitty!`, `Shut up, stupid kitty!`, `"Meow meow meow", that's all I hear`, `When will you learn....`, `If you disobey me, I will be forced to punish you...`, `Shut up, that mouth is only good for licking`, `Why are you being so naughty?`, `I can take care of that attitude`, `You'll regret saying that`, `Remember who is in charge`, `Assume the position`]
 var petsCooldown = {}
 var bumpMsg = null
+var stanzaTemp = '1216417228031787108';
+var categoriaTemp = '1216417153230569565';
+var voiceOwn = [];
 
 function activityLoop(){
     setTimeout(() => {
@@ -594,7 +597,86 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
-    if(!newState.channel||newState.deaf){//on disconnect or mute
+    if(oldState){//uscito dalla stanza
+        var oldChannel = oldState.channel
+        var OldMember = oldState.member
+        
+        if(oldState.channel!=newState.channel){
+            if(oldChannel && oldChannel.parentId == categoriaTemp && oldChannel.id != stanzaTemp) {
+            if(oldChannel.members.size===0){
+                setTimeout(function(){
+                    if(!oldState.channel)return;
+                    for (let i = 0; i < voiceOwn.length; i++){
+                        if(oldState.channel.id == voiceOwn[i][0]){
+                            if(oldState.channel.client.user.id == client.user.id)oldState.channel.delete("Stanza vuota");
+                            if(voiceOwn[i]&&voiceOwn[i][2])clearTimeout(voiceOwn[i][2]);
+                            voiceOwn.splice(i,1);
+                        }
+                    }
+                }, 5000)
+            }
+            }
+        
+            if(oldState.channel){
+            for(var i=0; i<voiceOwn.length; i++) {
+                if(voiceOwn[i][1] === oldState.member.id && voiceOwn[i][0] === oldState.channel.id) {
+                voiceOwn[i][2] = setTimeout( function(){
+                    if(!oldState.channel)return;
+                    if(oldState.channel.client.user.id == client.user.id)oldState.channel.delete('Proprietario assente');
+                    voiceOwn.splice(i,1);
+                }, 300000)
+                }
+            }
+            }
+        }
+    }
+    if(newState){//entrato in stanza
+        var newChannel = newState.channel
+        var newMember = newState.member
+
+        if(newState.channel){
+            if(oldState.channelId!=newState.channelId && newState.channelID == stanzaTemp) {
+                newState.guild.channels.create({
+                    name: newMember.user.username+"'s private",
+                    type: ChannelType.GuildVoice,
+                    parent: categoriaTemp
+                }).then(channel => {
+                    voiceOwn[voiceOwn.length] = [channel.id, newMember.id];
+                    
+                    /*setTimeout(function(){
+                    channel.setParent(categoriaTemp, { lockPermissions: false })
+                    }, 1000)
+                    
+                    channel.overwritePermissions(newMember.id, {
+                    CONNECT: true
+                    })
+                    setTimeout(function(){
+                    channel.overwritePermissions(client.guilds.get(serverId).defaultRole.id, {
+                    CONNECT: false
+                    })
+                    }, 1000)
+                    */
+                    setTimeout(function(){
+                    newState.setChannel(channel)
+                    channel.permissionOverwrites.create(newState.member.id, {
+                        CONNET: true,
+                        SPEAK: true,
+                        MUTE_MEMBERS: true,
+                        DEAFEN_MEMBERS: true,
+                        VIEW_CHANNEL: true
+                    })
+                    }, 1000)
+                })
+            
+            }else{
+                for(var i = 0; i<voiceOwn.length; i++) {
+                    if(voiceOwn[i][0] === newState.channel.id && voiceOwn[i][1] === newState.member.id)
+                    clearTimeout(voiceOwn[i][2]);
+                }
+            }
+        }
+    }
+/*     if(!newState.channel||newState.deaf){//on disconnect or mute
         if(money[oldState.member.id])clearInterval(money[oldState.member.id])
         fs.writeFileSync('./eco.json', JSON.stringify(eco))
         return
@@ -606,7 +688,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
         money[newState.member.id] = setInterval(() => {
             eco[newState.member.id]+= Math.floor(Math.random() * (50-10))+10;
         }, 60000);
-    }
+    } */
 })
 
 client.login(token)
